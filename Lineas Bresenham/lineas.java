@@ -18,6 +18,7 @@ public class lineas extends PApplet {
 	}
 
 	public void mouseClicked() {
+		ellipse(mouseX, mouseY, 5, 5);
 		if (x0 == 0 && y0 == 0) {
 			x0 = mouseX;
 			y0 = mouseY;
@@ -96,16 +97,17 @@ public class lineas extends PApplet {
 				}
 			}
 			else{
-				p = -dy - 2 * dx;
-				x=x0;
-				for (y = y0; y <= y1; y = y + 1) {
-					point(x,y);
-					
+				x = x0;
+				dx=abs(dx);
+				dy=abs(dy);
+				p = -dx + 2 * dy;
+				for (y = y0; y >= y1; y = y - 1) {
+					point(x, y);
 					if (p > 0) {
-						x = x - 1;
-						p = p - 2 * dy - 2 * dx;
+						x = x + 1;
+						p = p - 2 * dy + 2 * dx;
 					} else {
-						p = p - 2 * dx;
+						p = p + 2 * dx;
 					}
 				}
 			}
