@@ -14,7 +14,6 @@ public class lineas extends PApplet {
 	}
 
 	public void draw() {
-
 	}
 
 	public void mouseClicked() {
