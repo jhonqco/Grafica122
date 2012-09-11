@@ -2,13 +2,16 @@ import processing.core.PApplet;
 
 @SuppressWarnings("serial")
 public class Circunferencias extends PApplet {
-	int x0 = -1;
-	int y0 = -1;
 	int x1 = 0;
 	int y1 = 0;
 
 	public void setup() {
-		
+		stroke(255,0,0);
+		line(0, 0, width, height);
+		line(width, 0, 0, height);
+		line(0,height/2,width,height/2);
+		line(width/2,0,width/2,height);
+		stroke(0);
 	}
 
 	public void draw() {
@@ -17,27 +20,32 @@ public class Circunferencias extends PApplet {
 
 	public void mouseClicked() {
 		ellipse(mouseX, mouseY, 5, 5);
-		if (x0 == -1 && y0 == -1) {
-			x0 = mouseX;
-			y0 = mouseY;
-			return;
-		} else {
-			x1 = mouseX;
-			y1 = mouseY;
-		}
-		int r = (int) sqrt(sq(x0) + sq(y0));
+		x1 = mouseX-width/2;
+		y1 = mouseY-height/2;
+		int r = (int) sqrt(sq(x1) + sq(y1));
 		int d = 1 - r + (1 / 4);
-		x0 = 0;
-		y0 = r;
-		point(x0++, y0);
+		x1 = 0;
+		y1 = r;
+		point(x1++, y1);
 		translate(width/2, height/2);
-		while (y0 / x0 > 1) {
-			point(x0++, y0);
+		for (;y1 / x1 >= 1;x1++) {
+			point(y1,x1);	// octante 1
+			point(x1, y1);	// octante 2
+			
+			point(-x1,y1);	// octante 3
+			point(-y1,x1);	// octante 4
+			
+			point(-y1,-x1);	// octante 5
+			point(-x1,-y1);	// octante 6
+			
+			point(x1,-y1);	// octante 7
+			point(y1,-x1);	// octante 8			
+			
 			if (d < 0) {
-				d = d + (2 * x0 + 3);
+				d = d + (2 * x1 + 3);
 			} else {
-				y0 = y0 - 1;
-				d += (2 * x0) - (2 * y0) + 5;
+				y1 = y1 - 1;
+				d += (2 * x1) - (2 * y1) + 5;
 			}
 		}
 	}
