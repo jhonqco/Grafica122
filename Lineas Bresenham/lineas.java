@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 
+@SuppressWarnings("serial")
 public class lineas extends PApplet {
 
 	boolean v = true;
