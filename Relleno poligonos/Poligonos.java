@@ -28,25 +28,22 @@ public class Poligonos extends PApplet {
 			vertices.add(new PVector(mouseX, mouseY));
 
 		} else if (mouseButton == RIGHT && !vertices.isEmpty()) {
-			// Cerrar poligono
+			// Cerrar poligono y añadir a la lista
 			vertices.add(vertices.get(0));
+			vertices.trimToSize();
 			listPolygons.add(vertices);
 			vertices = new ArrayList<PVector>();
-			buildEdgeTable();
 			background(0);
+			// Parte importante ET y relleno
+			buildEdgeTable();
 			fillPolygon();
+			
+			for (ArrayList<PVector> vertices : listPolygons) {
+				drawListOfVertices(vertices, false);
+			}
 		}
-		// Dibujar poligono
-		stroke(255, 0, 0);
-		beginShape();
-		for (PVector vertice : vertices) {
-			fill(0, 255, 0);
-			text("(" + vertice.x + ", " + vertice.y + ")", vertice.x, vertice.y);
-			noFill();
-			ellipse(vertice.x, vertice.y, 5, 5);
-			vertex(vertice.x, vertice.y);
-		}
-		endShape();
+		// Dibujar bordes del poligono en construccion
+		drawListOfVertices(vertices, true);
 	}
 
 	private void fillPolygon() {
@@ -157,6 +154,21 @@ public class Poligonos extends PApplet {
 			}
 		});
 		list.trimToSize();
+	}
+
+	private void drawListOfVertices(ArrayList<PVector> vertices, boolean printCoordinates) {
+		stroke(255, 0, 0);
+		beginShape();
+		for (PVector vertice : vertices) {
+			if (printCoordinates) {
+				fill(0, 255, 0);
+				text("(" + vertice.x + ", " + vertice.y + ")", vertice.x, vertice.y);
+				noFill();
+			}
+			ellipse(vertice.x, vertice.y, 5, 5);
+			vertex(vertice.x, vertice.y);
+		}
+		endShape();
 	}
 
 }
