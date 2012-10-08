@@ -1,58 +1,57 @@
-import java.util.ArrayList;
-
 import processing.core.PApplet;
-import processing.core.PVector;
 
 @SuppressWarnings("serial")
 public class Principal extends PApplet {
-	private ArrayList<PVector> prueba= new ArrayList<PVector>();
-	
+	int numSegments = 3;
+	float[] x = new float[numSegments];
+	float[] y = new float[numSegments];
+	float[] angle = new float[numSegments];
+	float segLength = 50;
+	float targetX, targetY;
+
 	public void setup() {
-		size(500, 500);
-		background(0);
-		stroke(255, 0, 0);
-		line(0, 0, width, height);
-		line(width, 0, 0, height);
-		line(0, height / 2, width, height / 2);
-		line(width / 2, 0, width / 2, height);
-		stroke(0);
-		
-		// inicializar poligono de prueba
-		int e=5;
-		prueba.add(new PVector(10*e, 10*e));
-		prueba.add(new PVector(20*e, 10*e));
-		prueba.add(new PVector(20*e, 20*e));
-		prueba.add(new PVector(15*e, 20*e));
-		prueba.add(new PVector(15*e, 30*e));
-		prueba.add(new PVector(10*e, 30*e));
-		prueba.add(new PVector(10*e, 10*e));
-		prueba.trimToSize();
-		noFill();
-		stroke(255);
-		drawPolygon(prueba);
-		
+		size(640, 360);
+		strokeWeight(20);
+		stroke(255, 100);
+		x[x.length - 1] = width / 2; // Set base x-coordinate
+		y[x.length - 1] = height / 2; // Set base y-coordinate
 	}
 
 	public void draw() {
+		background(0);
 
-	}
-	public void mouseClicked(){
-		stroke(0,255,0);
-		drawPolygon(Transform2D.translate(prueba, -100, -150));
-		stroke(0,0,255);
-		drawPolygon(Transform2D.scale(prueba, (float) 2.5));
-		stroke(255,255,0);
-		drawPolygon(Transform2D.rotate(prueba, PI/2));
-	}
-	
-	public void drawPolygon(ArrayList<PVector> polygon){
-		pushMatrix();
-		translate(width/2, height/2);
-		beginShape();
-		for(PVector point: polygon){
-			vertex(point.x, point.y);
+		reachSegment(0, mouseX, mouseY);
+		for (int i = 1; i < numSegments; i++) {
+			reachSegment(i, targetX, targetY);
 		}
-		endShape();
+		for (int i = x.length - 1; i >= 1; i--) {
+			positionSegment(i, i - 1);
+		}
+		for (int i = 0; i < x.length; i++) {
+			segment(x[i], y[i], angle[i], (i + 1) * 2);
+		}
+	}
+
+	void positionSegment(int a, int b) {
+		x[b] = x[a] + cos(angle[a]) * segLength;
+		y[b] = y[a] + sin(angle[a]) * segLength;
+	}
+
+	void reachSegment(int i, float xin, float yin) {
+		float dx = xin - x[i];
+		float dy = yin - y[i];
+		angle[i] = atan2(dy, dx);
+		targetX = xin - cos(angle[i]) * segLength;
+		targetY = yin - sin(angle[i]) * segLength;
+	}
+
+	void segment(float x, float y, float a, float sw) {
+		strokeWeight(sw);
+		pushMatrix();
+		translate(x, y);
+		rotate(a);
+		line(0, 0, segLength, 0);
 		popMatrix();
 	}
+
 }
