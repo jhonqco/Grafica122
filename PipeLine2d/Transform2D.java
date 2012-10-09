@@ -1,42 +1,40 @@
-import java.util.ArrayList;
-
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import processing.core.PVector;
 
 public class Transform2D {
-	public static ArrayList<PVector> translate(ArrayList<PVector> polygon, int dx, int dy) {
-		ArrayList<PVector> translatedPolygon = new ArrayList<PVector>(polygon.size());
+	public static Poligono translate(Poligono polygon, int dx, int dy) {
+		Poligono translatedPolygon = new Poligono(polygon.getVertices().size());
 
 		double[][] t = { { dx }, { dy } };
 
 		RealMatrix T = new Array2DRowRealMatrix(t);
 
-		for (PVector vertice : polygon) {
+		for (PVector vertice : polygon.getVertices()) {
 			RealMatrix P = pVectorToMatrix(vertice);
 
 			P = P.add(T);
 
-			translatedPolygon.add(matrixToPVector(P));
+			translatedPolygon.getVertices().add(matrixToPVector(P));
 		}
 		return translatedPolygon;
 	}
 
-	public static ArrayList<PVector> scale(ArrayList<PVector> polygon, float s) {
+	public static Poligono scale(Poligono polygon, float s) {
 		// Transladar al origen
 		PVector center = centerOf(polygon);
 		polygon = translate(polygon, (int) -center.x, (int) -center.y);
 		// Escalar
-		ArrayList<PVector> scaledPolygon = new ArrayList<PVector>(polygon.size());
+		Poligono scaledPolygon = new Poligono(polygon.getVertices().size());
 		double[][] t = { { s, 0 }, { 0, s } };
 		RealMatrix S = new Array2DRowRealMatrix(t);
-		for (PVector vertice : polygon) {
+		for (PVector vertice : polygon.getVertices()) {
 			RealMatrix P = pVectorToMatrix(vertice);
 
 			P = S.multiply(P);
 
-			scaledPolygon.add(matrixToPVector(P));
+			scaledPolygon.getVertices().add(matrixToPVector(P));
 		}
 		// Transladar al la ubicacion original
 		scaledPolygon = translate(scaledPolygon, (int) center.x, (int) center.y);
@@ -44,8 +42,8 @@ public class Transform2D {
 
 	}
 
-	public static ArrayList<PVector> rotate(ArrayList<PVector> polygon, float angle) {
-		ArrayList<PVector> rotatedPolygon = new ArrayList<PVector>(polygon.size());
+	public static Poligono rotate(Poligono polygon, float angle) {
+		Poligono rotatedPolygon = new Poligono(polygon.getVertices().size());
 		// Transladar al origen
 		PVector center = centerOf(polygon);
 		polygon = translate(polygon, (int) -center.x, (int) -center.y);
@@ -53,21 +51,24 @@ public class Transform2D {
 		double[][] t = { { Math.cos(angle), -Math.sin(angle) },
 				{ Math.sin(angle), Math.cos(angle) } };
 		RealMatrix R = new Array2DRowRealMatrix(t);
-		for (PVector vertice : polygon) {
+		for (PVector vertice : polygon.getVertices()) {
 			RealMatrix P = pVectorToMatrix(vertice);
 
 			P = R.multiply(P);
 
-			rotatedPolygon.add(matrixToPVector(P));
+			rotatedPolygon.getVertices().add(matrixToPVector(P));
 		}
 		// Transladar al la ubicacion original
 		rotatedPolygon = translate(rotatedPolygon, (int) center.x, (int) center.y);
 		return rotatedPolygon;
 	}
 
-	private static PVector centerOf(ArrayList<PVector> polygon) {
-		float maxX = polygon.get(0).x, minX = maxX, maxY = polygon.get(0).y, minY = maxY;
-		for (PVector vertex : polygon) {
+	private static PVector centerOf(Poligono polygon) {
+		float maxX = polygon.getVertices().get(0).x;
+		float minX = maxX;
+		float maxY = polygon.getVertices().get(0).y;
+		float minY = maxY;
+		for (PVector vertex : polygon.getVertices()) {
 			// Actualizando valores en x
 			if (vertex.x > maxX)
 				maxX = vertex.x;
