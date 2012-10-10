@@ -8,8 +8,6 @@ public class CorteLineas extends PApplet{
 
 	ArrayList<punto> puntos = new ArrayList<punto>();
 
-
-
 	class punto {
 	int x,y;
 	punto(int xi, int yi) {
@@ -114,7 +112,7 @@ public class CorteLineas extends PApplet{
 	  }
 	}
 
-	private static int bits(punto P){
+	private static int 	(punto P){
 	int cod = 0;
 	if(P.y < yMin) cod = cod + 8;
 	else if(P.y > yMay) cod = cod + 4;
