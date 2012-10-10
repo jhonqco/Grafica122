@@ -112,7 +112,7 @@ public class CorteLineas extends PApplet{
 	  }
 	}
 
-	private static int 	(punto P){
+	private static int bits(punto P){
 	int cod = 0;
 	if(P.y < yMin) cod = cod + 8;
 	else if(P.y > yMay) cod = cod + 4;
