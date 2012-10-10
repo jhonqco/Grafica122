@@ -59,7 +59,8 @@ public class Transform2D {
 			rotatedPolygon.getVertices().add(matrixToPVector(P));
 		}
 		// Transladar al la ubicacion original
-		rotatedPolygon = translate(rotatedPolygon, (int) center.x, (int) center.y);
+		rotatedPolygon = translate(rotatedPolygon, (int) center.x,
+				(int) center.y);
 		return rotatedPolygon;
 	}
 
@@ -81,6 +82,16 @@ public class Transform2D {
 				minY = vertex.y;
 		}
 		return new PVector((maxX + minY) / 2, (maxY + minY) / 2);
+	}
+
+	public static Poligono centerOn(Poligono polygon, int x, int y) {
+		Poligono rotatedPolygon = new Poligono(polygon.getVertices().size());
+		// Transladar al origen
+		PVector center = centerOf(polygon);
+		polygon = translate(polygon, (int) -center.x, (int) -center.y);
+		// Transladar al la ubicacion original
+		rotatedPolygon = translate(polygon, x, y);
+		return rotatedPolygon;
 	}
 
 	private static RealMatrix pVectorToMatrix(PVector vector) {

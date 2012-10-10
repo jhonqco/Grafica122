@@ -68,26 +68,32 @@ public class Principal extends PApplet {
 
 	public void dibujaFig(PGraphics canvas, float n) {
 
+		Poligono ventana=new Poligono();
+		ventana.getVertices().add(new PVector(0,0));
+		ventana.getVertices().add(new PVector(0, 80));
+		ventana.getVertices().add(new PVector(70, 80));
+		ventana.getVertices().add(new PVector(70, 100));
+		ventana.getVertices().add(new PVector(40, 100));
+		ventana.getVertices().add(new PVector(100, 140));
+		ventana.getVertices().add(new PVector(160, 100));
+		ventana.getVertices().add(new PVector(130, 100));
+		ventana.getVertices().add(new PVector(130, 80));
+		ventana.getVertices().add(new PVector(200, 80));
+		ventana.getVertices().add(new PVector(200, 0));
+		ventana.getVertices().add(new PVector(0, 0));
+	
+		
+		
+		
+		
 	  canvas.fill(0,0,0,0);
 	  canvas.stroke(0);
 	  canvas.strokeWeight(2);
 	  canvas.pushMatrix();
-	  canvas.translate(mouseX,mouseY);
-	  canvas.scale(n);
-	  canvas.beginShape();
-	  canvas.vertex(0, 0);
-	  canvas.vertex(0, 80);
-	  canvas.vertex(70, 80);
-	  canvas.vertex(70, 100);
-	  canvas.vertex(40, 100);
-	  canvas.vertex(100, 140);
-	  canvas.vertex(160, 100);
-	  canvas.vertex(130, 100);
-	  canvas.vertex(130, 80);
-	  canvas.vertex(200, 80);
-	  canvas.vertex(200, 0);
-	  canvas.vertex(0, 0);
-	  canvas.endShape();
+	  ventana=Transform2D.scale(ventana, n);
+	  ventana=Transform2D.centerOn(ventana, mouseX, mouseY);
+	 
+	  ventana.dibujar(canvas);
 	  canvas.popMatrix();
 	}
 
