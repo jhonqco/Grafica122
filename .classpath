@@ -11,6 +11,10 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Processing 2.0a8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-math3"/>
+<<<<<<< Upstream, based on origin/master
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Processing2.0a8"/>
+=======
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Pro"/>
+>>>>>>> a9290b0 mmm
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
