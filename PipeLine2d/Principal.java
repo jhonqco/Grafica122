@@ -1,57 +1,161 @@
-import processing.core.PApplet;
+import processing.core.*;
+import java.awt.event.*;
 
 @SuppressWarnings("serial")
 public class Principal extends PApplet {
-	int numSegments = 3;
-	float[] x = new float[numSegments];
-	float[] y = new float[numSegments];
-	float[] angle = new float[numSegments];
-	float segLength = 50;
-	float targetX, targetY;
+	float fact =1;
+	boolean moved =true;
+	boolean swing =false;
+	PGraphics canvasRight, canvasLeft;
+	  int numSegments = 3; 
+	  float[] x = new float[numSegments];
+	  float[] y = new float[numSegments];
+	  float[] angle = new float[numSegments];
+	  float segLength = 50;
+	  float targetX=0, targetY=0;
+
+	public void mouseWheel(int delta) {
+	  fact=fact+(float)(delta*0.1);
+	  moved=true;
+	}
+
 
 	public void setup() {
-		size(640, 360);
-		strokeWeight(20);
-		stroke(255, 100);
-		x[x.length - 1] = width / 2; // Set base x-coordinate
-		y[x.length - 1] = height / 2; // Set base y-coordinate
+	  size(1000, 500);
+	  background(0);
+
+	  canvasRight=createGraphics(width/2, height);
+	  canvasLeft=createGraphics(width/2, height);
+
+	  addMouseWheelListener(new MouseWheelListener() 
+	  { 
+	    public void mouseWheelMoved(MouseWheelEvent mwe) 
+	    { 
+	      mouseWheel(mwe.getWheelRotation());
+	    }
+	  }
+	  );
 	}
+
 
 	public void draw() {
-		background(0);
+	  canvasRight.beginDraw();
+	  canvasRight.background(250);
+	  canvasRight.stroke(0);
+	  dibMundo(canvasRight,mouseX,mouseY);
+	  canvasRight.endDraw();
+	  image(canvasRight, 0, 0, width/2, height);
 
-		reachSegment(0, mouseX, mouseY);
-		for (int i = 1; i < numSegments; i++) {
-			reachSegment(i, targetX, targetY);
-		}
-		for (int i = x.length - 1; i >= 1; i--) {
-			positionSegment(i, i - 1);
-		}
-		for (int i = 0; i < x.length; i++) {
-			segment(x[i], y[i], angle[i], (i + 1) * 2);
-		}
+	  canvasLeft.beginDraw();
+	  canvasLeft.background(250);
+	  canvasLeft.stroke(250);
+	  canvasLeft.endDraw();
+	  image(canvasLeft, 500, 0, width/2, height);
+	}  
+
+
+
+	public void dibMundo(PGraphics canvas, int a,int b) {
+	  drawAxis(canvas);
+	  dibujaFig(canvas,fact);
+	  Snake(canvas);
 	}
 
-	void positionSegment(int a, int b) {
-		x[b] = x[a] + cos(angle[a]) * segLength;
-		y[b] = y[a] + sin(angle[a]) * segLength;
+
+
+
+
+
+	public void dibujaFig(PGraphics canvas, float n) {
+
+	  canvas.fill(0,0,0,0);
+	  canvas.stroke(0);
+	  canvas.strokeWeight(2);
+	  canvas.pushMatrix();
+	  canvas.translate(mouseX,mouseY);
+	  canvas.scale(n);
+	  canvas.beginShape();
+	  canvas.vertex(0, 0);
+	  canvas.vertex(0, 80);
+	  canvas.vertex(70, 80);
+	  canvas.vertex(70, 100);
+	  canvas.vertex(40, 100);
+	  canvas.vertex(100, 140);
+	  canvas.vertex(160, 100);
+	  canvas.vertex(130, 100);
+	  canvas.vertex(130, 80);
+	  canvas.vertex(200, 80);
+	  canvas.vertex(200, 0);
+	  canvas.vertex(0, 0);
+	  canvas.endShape();
+	  canvas.popMatrix();
 	}
 
-	void reachSegment(int i, float xin, float yin) {
-		float dx = xin - x[i];
-		float dy = yin - y[i];
-		angle[i] = atan2(dy, dx);
-		targetX = xin - cos(angle[i]) * segLength;
-		targetY = yin - sin(angle[i]) * segLength;
+
+
+
+
+
+	public void drawAxis(PGraphics canvas) {
+
+	  //cuadros cada 50
+	  canvas.strokeWeight(1);
+	  for (int i=0;i<=10;i++) {
+	    canvas.line(i*50, 0, i*50, 500);
+	    canvas.line(0, i*50, 500, i*50);
+	  }
+
+
+	  // X-Axis
+	  canvas.strokeWeight(2);
+	  canvas.stroke(255, 0, 0);
+	  canvas.line(250,0, 250, 500);
+	  
+	  // Y-Axis
+	  canvas.stroke(0, 0, 255);
+	  canvas.line(0, 250, 500, 250);
+	 
 	}
 
-	void segment(float x, float y, float a, float sw) {
-		strokeWeight(sw);
-		pushMatrix();
-		translate(x, y);
-		rotate(a);
-		line(0, 0, segLength, 0);
-		popMatrix();
+	public void Snake(PGraphics canvas){
+
+
+	  canvas.stroke(0, 100);
+	  x[x.length-1] = canvas.width/2;     // Set base x-coordinate
+	  y[x.length-1] = canvas.height/2;  // Set base y-coordinate
+
+	  reachSegment(0, mouseX, mouseY);
+	  for(int i=1; i<numSegments; i++) {
+	    reachSegment(i, targetX, targetY);
+	  }
+	  for(int i=x.length-1; i>=1; i--) {
+	    positionSegment(i, i-1);  
+	  } 
+	  for(int i=0; i<x.length; i++) {
+	    segment(x[i], y[i], angle[i], 5,canvas); 
+	  }
+	}
+
+	public void positionSegment(int a, int b) {
+	  x[b] = x[a] + cos(angle[a]) * segLength;
+	  y[b] = y[a] + sin(angle[a]) * segLength; 
+	}
+
+	public void reachSegment(int i, float xin, float yin) {
+	  float dx = xin - x[i];
+	  float dy = yin - y[i];
+	  angle[i] = atan2(dy, dx);  
+	  targetX = xin - cos(angle[i]) * segLength;
+	  targetY = yin - sin(angle[i]) * segLength;
+	}
+
+	public void segment(float x, float y, float a, float sw,PGraphics canvas) {
+	  canvas.strokeWeight(sw);
+	  canvas.pushMatrix();
+	  canvas.translate(x, y);
+	  canvas.rotate(a);
+	  canvas.line(0, 0, segLength, 0);
+	  canvas.popMatrix();
 	}
 
 }
