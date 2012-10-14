@@ -53,18 +53,11 @@ public class Principal extends PApplet {
 	  image(canvasLeft, 500, 0, width/2, height);
 	}  
 
-
-
 	public void dibMundo(PGraphics canvas, int a,int b) {
 	  drawAxis(canvas);
 	  dibujaFig(canvas,fact);
 	  Snake(canvas);
 	}
-
-
-
-
-
 
 	public void dibujaFig(PGraphics canvas, float n) {
 
@@ -92,7 +85,6 @@ public class Principal extends PApplet {
 	  canvas.pushMatrix();
 	  ventana=Transform2D.scale(ventana, n);
 	  ventana=Transform2D.centerOn(ventana, mouseX, mouseY);
-	 
 	  ventana.dibujar(canvas);
 	  canvas.popMatrix();
 	}

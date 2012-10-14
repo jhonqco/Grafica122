@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="Lineas Bresenham"/>
+	<classpathentry excluding="build/classes/|build/|PipeLine2d/|Librerias/|Circunferencias y elipses/|Circunferencias y elipses/|Lineas Bresenham/|Lineas Bresenham/|PipeLine2d/|Relleno poligonos/|Relleno poligonos/" kind="src" path=""/>
 	<classpathentry kind="src" path="Circunferencias y elipses"/>
-	<classpathentry kind="src" path="Relleno poligonos"/>
+	<classpathentry kind="src" path="Lineas Bresenham"/>
 	<classpathentry kind="src" path="PipeLine2d"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+	<classpathentry kind="src" path="Relleno poligonos"/>
+	<classpathentry kind="lib" path="Librerias/commons-math3-3.0/commons-math3-3.0.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/core.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Processing 2.0a8"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-math3"/>
-<<<<<<< Upstream, based on origin/master
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Processing2.0a8"/>
-=======
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Pro"/>
->>>>>>> a9290b0 mmm
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
