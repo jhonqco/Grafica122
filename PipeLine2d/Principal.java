@@ -3,23 +3,53 @@ import java.awt.event.*;
 
 @SuppressWarnings("serial")
 public class Principal extends PApplet {
+	
 	float fact =1;
 	boolean moved =true;
-	boolean swing =false;
 	PGraphics canvasRight, canvasLeft;
-	  int numSegments = 3; 
-	  float[] x = new float[numSegments];
-	  float[] y = new float[numSegments];
-	  float[] angle = new float[numSegments];
-	  float segLength = 50;
-	  float targetX=0, targetY=0;
-
+	boolean dibujar =false;
+	boolean agregar = false;
+	boolean estatico =true;
+	Poligono general=new Poligono();
+	int m,n;
+	float rot=0;
+	
+	
+	//metodo para guardar la posicion del mouse
+	public void mList(){
+		if(estatico){
+			m=mouseX;
+			n=mouseY;
+		}
+	}
+	
+	
+	
+	//metodo que permite obtener la cantidad de movimientos del scroll
+	//para cambiar el factor de conversion de las figuras
 	public void mouseWheel(int delta) {
 	  fact=fact+(float)(delta*0.1);
 	  moved=true;
 	}
+	
+	//metodo que determina los cursos de accion segun la tecla presionada
+	public void keyPressed(){
+		if(key == 'd' || key == 'D'){
+			dibujar = true;
+			agregar = !agregar;
+			estatico = !estatico;
+		}
+		else if(key == 'e' || key == 'E'){
+			dibujar = false;
+			general=new Poligono();
+		}
+		else if(key == 'r' || key == 'R'){
+			rot=rot+(float)(3.14/4);
+		}
+	}
 
 
+	//SETUP
 	public void setup() {
 	  size(1000, 500);
 	  background(0);
@@ -38,14 +68,19 @@ public class Principal extends PApplet {
 	}
 
 
+	//DRAW
 	public void draw() {
+		
+	//dibujo del canvas de la izquierda (mundo)
 	  canvasRight.beginDraw();
 	  canvasRight.background(250);
 	  canvasRight.stroke(0);
-	  dibMundo(canvasRight,mouseX,mouseY);
+	  dibMundo(canvasRight);
+	  dibFigura(canvasRight);
 	  canvasRight.endDraw();
 	  image(canvasRight, 0, 0, width/2, height);
 
+	//dibujo del canvas de la derecha (proyeccion del cuadro)
 	  canvasLeft.beginDraw();
 	  canvasLeft.background(250);
 	  canvasLeft.stroke(250);
@@ -53,13 +88,30 @@ public class Principal extends PApplet {
 	  image(canvasLeft, 500, 0, width/2, height);
 	}  
 
-	public void dibMundo(PGraphics canvas, int a,int b) {
-	  drawAxis(canvas);
-	  dibujaFig(canvas,fact);
-	  Snake(canvas);
+	//metodo que dibuja el poligono del mundo
+	private void dibFigura(PGraphics canvas) {
+	
+		if(agregar){
+			if(mousePressed){
+				general.getVertices().add(new PVector(mouseX,mouseY));
+			}
+		}
+		if(dibujar){
+			general.dibujar(canvas);
+		}
+		
 	}
 
-	public void dibujaFig(PGraphics canvas, float n) {
+
+	//metodo que dibuja el mundo
+	public void dibMundo(PGraphics canvas) {
+	  drawAxis(canvas);
+	  mList();
+	  dibujaFig(canvas,fact,m,n);
+	}
+
+	//metodo que dibuja la ventana que hará las transformaciones
+	public void dibujaFig(PGraphics canvas, float n, int a, int b) {
 
 		Poligono ventana=new Poligono();
 		ventana.getVertices().add(new PVector(0,0));
@@ -82,11 +134,12 @@ public class Principal extends PApplet {
 	  canvas.fill(0,0,0,0);
 	  canvas.stroke(0);
 	  canvas.strokeWeight(2);
-	  canvas.pushMatrix();
+	
 	  ventana=Transform2D.scale(ventana, n);
-	  ventana=Transform2D.centerOn(ventana, mouseX, mouseY);
+	  ventana=Transform2D.centerOn(ventana, a, b);
+	  ventana =Transform2D.rotate(ventana, rot);
 	  ventana.dibujar(canvas);
-	  canvas.popMatrix();
+	  
 	}
 
 
@@ -94,6 +147,7 @@ public class Principal extends PApplet {
 
 
 
+	//metodo que dibuja los ejes
 	public void drawAxis(PGraphics canvas) {
 
 	  //cuadros cada 50
@@ -115,45 +169,5 @@ public class Principal extends PApplet {
 	 
 	}
 
-	public void Snake(PGraphics canvas){
-
-
-	  canvas.stroke(0, 100);
-	  x[x.length-1] = canvas.width/2;     // Set base x-coordinate
-	  y[x.length-1] = canvas.height/2;  // Set base y-coordinate
-
-	  reachSegment(0, mouseX, mouseY);
-	  for(int i=1; i<numSegments; i++) {
-	    reachSegment(i, targetX, targetY);
-	  }
-	  for(int i=x.length-1; i>=1; i--) {
-	    positionSegment(i, i-1);  
-	  } 
-	  for(int i=0; i<x.length; i++) {
-	    segment(x[i], y[i], angle[i], 5,canvas); 
-	  }
-	}
-
-	public void positionSegment(int a, int b) {
-	  x[b] = x[a] + cos(angle[a]) * segLength;
-	  y[b] = y[a] + sin(angle[a]) * segLength; 
-	}
-
-	public void reachSegment(int i, float xin, float yin) {
-	  float dx = xin - x[i];
-	  float dy = yin - y[i];
-	  angle[i] = atan2(dy, dx);  
-	  targetX = xin - cos(angle[i]) * segLength;
-	  targetY = yin - sin(angle[i]) * segLength;
-	}
-
-	public void segment(float x, float y, float a, float sw,PGraphics canvas) {
-	  canvas.strokeWeight(sw);
-	  canvas.pushMatrix();
-	  canvas.translate(x, y);
-	  canvas.rotate(a);
-	  canvas.line(0, 0, segLength, 0);
-	  canvas.popMatrix();
-	}
-
+	
 }
