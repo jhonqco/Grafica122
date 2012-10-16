@@ -46,7 +46,7 @@ public class Principal extends PApplet {
 			general=new Poligono();
 		}
 		else if(key == 'r' || key == 'R'){
-			rot=rot+(float)(3.14/4);
+			rot=rot+(float)(3.14/8);
 		}
 	}
 
@@ -93,9 +93,13 @@ public class Principal extends PApplet {
 
 	private void dibujaderecha(PGraphics canvas) {
 		// TODO Auto-generated method stub
+		canvas.strokeWeight(3);
+		canvas.line(0, 0, 0, height);
+		canvas.strokeWeight(2);
 		Poligono x =new Poligono();
 		//x = RecortePoligonos.recorte(ventana);
 		x.dibujar(canvas);
+		//x=Transform2D.centerOn(x, width/2, height/2);
 		
 	}
 
@@ -110,6 +114,7 @@ public class Principal extends PApplet {
 			}
 		}
 		if(dibujar){
+			canvas.stroke(0,200,0);
 			general.dibujar(canvas);
 		}
 		
@@ -169,8 +174,8 @@ public class Principal extends PApplet {
 	    canvas.line(i*50, 0, i*50, 500);
 	    canvas.line(0, i*50, 500, i*50);
 	  }
-
-
+	  
+	  
 	  // X-Axis
 	  canvas.strokeWeight(2);
 	  canvas.stroke(255, 0, 0);
