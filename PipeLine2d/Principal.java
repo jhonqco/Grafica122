@@ -1,4 +1,5 @@
 import processing.core.*;
+
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
@@ -13,6 +14,7 @@ public class Principal extends PApplet {
 	Poligono general=new Poligono();
 	int m,n;
 	float rot=0;
+	
 	
 	
 	//metodo para guardar la posicion del mouse
@@ -83,10 +85,21 @@ public class Principal extends PApplet {
 	//dibujo del canvas de la derecha (proyeccion del cuadro)
 	  canvasLeft.beginDraw();
 	  canvasLeft.background(250);
-	  canvasLeft.stroke(250);
+	  canvasLeft.stroke(0);
+	  dibujaderecha(canvasLeft);
 	  canvasLeft.endDraw();
 	  image(canvasLeft, 500, 0, width/2, height);
 	}  
+
+	private void dibujaderecha(PGraphics canvas) {
+		// TODO Auto-generated method stub
+		Poligono x =new Poligono();
+		//x = RecortePoligonos.recorte(ventana);
+		x.dibujar(canvas);
+		
+	}
+
+
 
 	//metodo que dibuja el poligono del mundo
 	private void dibFigura(PGraphics canvas) {

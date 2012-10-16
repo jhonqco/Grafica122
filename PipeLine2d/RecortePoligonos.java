@@ -19,7 +19,7 @@ public class RecortePoligonos extends PApplet {
 	}
 	
 	
-	public Poligono recorte(Poligono g){
+	public static  Poligono recorte(Poligono g){
 		Poligono n = new Poligono();
 		return n;
 	}
