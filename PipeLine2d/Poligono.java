@@ -72,4 +72,72 @@ public class Poligono {
 		return (int) Math.abs(maxY-minY);
 	}
 
+	public int getXmin() {
+		float minX = 0, maxX = 0;
+		for (int v = 0; v < vertices.size(); v++) {
+			float xValue = vertices.get(v).x;
+			if (v == 0) {
+				minX = xValue;
+				maxX = minX;
+			} else {
+				if (xValue > maxX)
+					maxX = xValue;
+				else if (xValue < minX)
+					minX = xValue;
+			}
+		}
+		return (int) minX;
+	}
+
+	public int getYmin() {
+		float minY = 0, maxY = 0;
+		for (int v = 0; v < vertices.size(); v++) {
+			float xValue = vertices.get(v).y;
+			if (v == 0) {
+				minY = xValue;
+				maxY = minY;
+			} else {
+				if (xValue > maxY)
+					maxY = xValue;
+				else if (xValue < minY)
+					minY = xValue;
+			}
+		}
+		return (int) minY;
+	}
+
+	public int getYmax() {
+		float minY = 0, maxY = 0;
+		for (int v = 0; v < vertices.size(); v++) {
+			float xValue = vertices.get(v).y;
+			if (v == 0) {
+				minY = xValue;
+				maxY = minY;
+			} else {
+				if (xValue > maxY)
+					maxY = xValue;
+				else if (xValue < minY)
+					minY = xValue;
+			}
+		}
+		return (int) maxY;
+	}
+
+	public int getXmax() {
+		float minX = 0, maxX = 0;
+		for (int v = 0; v < vertices.size(); v++) {
+			float xValue = vertices.get(v).x;
+			if (v == 0) {
+				minX = xValue;
+				maxX = minX;
+			} else {
+				if (xValue > maxX)
+					maxX = xValue;
+				else if (xValue < minX)
+					minX = xValue;
+			}
+		}
+		return (int) maxX;
+	}
+
 }

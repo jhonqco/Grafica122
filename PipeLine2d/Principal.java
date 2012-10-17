@@ -14,6 +14,7 @@ public class Principal extends PApplet {
 	Poligono general=new Poligono();
 	int m,n;
 	float rot=0;
+	Poligono ventana=new Poligono();
 	
 	
 	
@@ -46,7 +47,7 @@ public class Principal extends PApplet {
 			general=new Poligono();
 		}
 		else if(key == 'r' || key == 'R'){
-			rot=rot+(float)(3.14/8);
+			rot = rot+(float)(3.14/8);
 		}
 	}
 
@@ -96,8 +97,11 @@ public class Principal extends PApplet {
 		canvas.strokeWeight(3);
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
-		Poligono x = RecortePoligonos.recorte(general);
-		x=Transform2D.bestFit(x, canvas.width, canvas.height);
+		CorteLineas cortador = new CorteLineas();
+		Poligono x = Transform2D.rotate(general, -rot);
+		x = Transform2D.scale(x, 1/fact);
+		x = cortador.recorte(x,ventana.getXmin(),ventana.getYmin(),ventana.getXmax(),ventana.getYmax());
+		x = Transform2D.centerOn(x, canvas.width/2, canvas.height/2);
 		x.dibujar(canvas);
 	}
 
@@ -128,8 +132,7 @@ public class Principal extends PApplet {
 
 	//metodo que dibuja la ventana que hará las transformaciones
 	public void dibujaFig(PGraphics canvas, float n, int a, int b) {
-
-		Poligono ventana=new Poligono();
+		ventana.getVertices().clear();
 		ventana.getVertices().add(new PVector(0,0));
 		ventana.getVertices().add(new PVector(0, 80));
 		ventana.getVertices().add(new PVector(70, 80));
