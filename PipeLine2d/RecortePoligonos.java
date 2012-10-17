@@ -1,7 +1,8 @@
 	import java.util.ArrayList;
-	import processing.core.PApplet;
-	import processing.core.PVector;
+import processing.core.PApplet;
+import processing.core.PVector;
 	
+@SuppressWarnings("serial")
 public class RecortePoligonos extends PApplet {
 	
 	Poligono p;
@@ -20,7 +21,7 @@ public class RecortePoligonos extends PApplet {
 	
 	
 	public static  Poligono recorte(Poligono g){
-		Poligono n = new Poligono();
+		Poligono n = g;
 		return n;
 	}
 

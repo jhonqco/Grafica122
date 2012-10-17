@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import processing.core.PApplet;
 
+@SuppressWarnings("serial")
 public class CorteLineas extends PApplet{
 	static int xIzq, yMin, xDer, yMay;
 	int x0,y0,x1,y1;

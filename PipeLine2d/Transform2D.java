@@ -88,6 +88,8 @@ public class Transform2D {
 	}
 
 	private static PVector centerOf(Poligono polygon) {
+		if(polygon.getVertices().size() == 0)
+			return new PVector();
 		float maxX = polygon.getVertices().get(0).x;
 		float minX = maxX;
 		float maxY = polygon.getVertices().get(0).y;

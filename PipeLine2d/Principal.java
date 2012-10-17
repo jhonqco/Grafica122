@@ -96,11 +96,9 @@ public class Principal extends PApplet {
 		canvas.strokeWeight(3);
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
-		Poligono x =new Poligono();
-		//x = RecortePoligonos.recorte(ventana);
+		Poligono x = RecortePoligonos.recorte(general);
+		x=Transform2D.bestFit(x, canvas.width, canvas.height);
 		x.dibujar(canvas);
-		//x=Transform2D.centerOn(x, width/2, height/2);
-		
 	}
 
 
