@@ -19,7 +19,7 @@
 	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-windows-amd64.jar"/>
 	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all-natives-windows-i586.jar"/>
 	<classpathentry kind="lib" path="Librerias/Processing 2.0a8/jogl-all.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
