@@ -98,7 +98,7 @@ public class Principal extends PApplet {
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
 		CorteLineas cortador = new CorteLineas();
-		Poligono x = Transform2D.rotate(general, -rot);
+		Poligono x = Transform2D.rotate(general, rot);
 		x = Transform2D.scale(x, 1/fact);
 		x = cortador.recorte(x,ventana.getXmin(),ventana.getYmin(),ventana.getXmax(),ventana.getYmax());
 		x = Transform2D.centerOn(x, canvas.width/2, canvas.height/2);
@@ -159,6 +159,19 @@ public class Principal extends PApplet {
 	  ventana =Transform2D.rotate(ventana, rot);
 	  ventana.dibujar(canvas);
 	  
+	}
+	
+	public void snake(PGraphics canvas){
+		canvas.strokeWeight(4);
+		//primer segmento
+		canvas.stroke(250,0,0);
+		
+		//segundo segmento
+		canvas.stroke(0,250,0);
+		
+		//tercer segmento
+		canvas.stroke(0,0,250);
+		
 	}
 
 
