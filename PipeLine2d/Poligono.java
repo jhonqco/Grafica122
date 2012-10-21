@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -14,13 +15,34 @@ public class Poligono {
 		vertices = new ArrayList<PVector>(size);
 	}
 
-	@SuppressWarnings("static-access")
 	public void dibujar(PGraphics canvas) {
 		canvas.beginShape();
 		for (PVector vertice : vertices) {
 			canvas.vertex(vertice.x, vertice.y);
 		}
-		canvas.endShape(canvas.CLOSE);
+		canvas.endShape(PConstants.CLOSE);
+	}
+	
+	public PVector getCenter() {
+		if(vertices.size() == 0)
+			return new PVector();
+		float maxX = vertices.get(0).x;
+		float minX = maxX;
+		float maxY = vertices.get(0).y;
+		float minY = maxY;
+		for (PVector vertex : vertices) {
+			// Actualizando valores en x
+			if (vertex.x > maxX)
+				maxX = vertex.x;
+			else if (vertex.x < minX)
+				minX = vertex.x;
+			// Actualizando valores en Y
+			if (vertex.y > maxY)
+				maxY = vertex.y;
+			else if (vertex.y < minY)
+				minY = vertex.y;
+		}
+		return new PVector((maxX + minX) / 2, (maxY + minY) / 2);
 	}
 
 	/**

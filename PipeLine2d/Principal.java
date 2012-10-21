@@ -4,7 +4,8 @@ import java.awt.event.*;
 
 @SuppressWarnings("serial")
 public class Principal extends PApplet {
-
+	
+	private MatrixTransform2D matrixOfTransforms;
 	float fact = 1;
 	boolean moved = true;
 	PGraphics canvasRight, canvasLeft;
@@ -52,6 +53,7 @@ public class Principal extends PApplet {
 
 		canvasRight = createGraphics(width / 2, height);
 		canvasLeft = createGraphics(width / 2, height);
+		matrixOfTransforms = new MatrixTransform2D();
 
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent mwe) {
@@ -86,13 +88,13 @@ public class Principal extends PApplet {
 		canvas.strokeWeight(3);
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
-		CorteLineas cortador = new CorteLineas();
-		Poligono x = Transform2D.rotate(general, rot);
-		x = Transform2D.scale(x, 1 / fact);
-		x = cortador.recorte(x, ventana.getXmin(), ventana.getYmin(),
-				ventana.getXmax(), ventana.getYmax());
-		x = Transform2D.centerOn(x, canvas.width / 2, canvas.height / 2);
-		x.dibujar(canvas);
+		//CorteLineas cortador = new CorteLineas();
+//		Poligono x = MatrixTransform2D.rotate(general, rot);
+//		x = MatrixTransform2D.scale(x, 1 / fact);
+//		x = cortador.recorte(x, ventana.getXmin(), ventana.getYmin(),
+//				ventana.getXmax(), ventana.getYmax());
+//		x = MatrixTransform2D.centerOn(x, canvas.width / 2, canvas.height / 2);
+//		x.dibujar(canvas);
 	}
 
 	// metodo que dibuja el poligono del mundo
@@ -145,14 +147,17 @@ public class Principal extends PApplet {
 		canvas.stroke(0);
 		canvas.strokeWeight(2);
 
-		flecha = Transform2D.scale(flecha, n);
-		flecha = Transform2D.centerOn(flecha, a, b);
-		flecha = Transform2D.rotate(flecha, rot);
+		MatrixTransform2D flechaMatrix = new MatrixTransform2D();
+		flechaMatrix.scale(n, flecha.getCenter());
+		flechaMatrix.translate((int)(a-flecha.getCenter().x), (int)(b-flecha.getCenter().y));
+		flechaMatrix.rotate(rot, new PVector(a, b));
+		flecha = flechaMatrix.applyOn(flecha);
 		flecha.dibujar(canvas);
 
-		ventana = Transform2D.scale(flecha, n);
-		ventana = Transform2D.centerOn(flecha, a, b);
-		ventana = Transform2D.rotate(flecha, rot);
+		matrixOfTransforms.scale(n, ventana.getCenter());
+		matrixOfTransforms.translate((int)(a-ventana.getCenter().x), (int)(b-ventana.getCenter().y));
+		matrixOfTransforms.rotate(rot, ventana.getCenter());
+		ventana = matrixOfTransforms.applyOn(ventana);
 		ventana.dibujar(canvas);
 
 	}
