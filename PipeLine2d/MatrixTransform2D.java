@@ -1,4 +1,5 @@
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import processing.core.PVector;
@@ -46,7 +47,6 @@ public class MatrixTransform2D {
 	}
 
 	public void rotate(float angleInRadians, PVector pivot) {
-		System.out.println(pivot);
 		// Transladar al origen
 		translate((int) -pivot.x, (int) -pivot.y);
 		// Rotar el poligono
@@ -70,6 +70,27 @@ public class MatrixTransform2D {
 			RealMatrix punto = new Array2DRowRealMatrix(puntoData);
 			// Aplicar trasformaciones
 			punto = punto.preMultiply(matrixTransform);
+			// Pasar de RealMatrix a PVector
+			float x = (float) punto.getEntry(0, 0);
+			float y = (float) punto.getEntry(1, 0);
+			PVector nuevoVertice = new PVector(x, y);
+			// Guardar nuevo vertice
+			transformedPolygon.getVertices().add(nuevoVertice);
+		}
+
+		return transformedPolygon;
+	}
+	
+	public Poligono applyInverseOn(Poligono polygon) {
+		RealMatrix inverseMatrix = new LUDecomposition(matrixTransform).getSolver().getInverse();
+		Poligono transformedPolygon = new Poligono(polygon.getVertices().size());
+		for (PVector vertice : polygon.getVertices()) {
+			// Pasar de PVector a RealMatrix
+			double[] puntoData =
+				{ vertice.x, vertice.y, 1 };
+			RealMatrix punto = new Array2DRowRealMatrix(puntoData);
+			// Aplicar trasformaciones
+			punto = punto.preMultiply(inverseMatrix);
 			// Pasar de RealMatrix a PVector
 			float x = (float) punto.getEntry(0, 0);
 			float y = (float) punto.getEntry(1, 0);

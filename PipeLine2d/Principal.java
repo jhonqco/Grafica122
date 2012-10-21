@@ -89,12 +89,12 @@ public class Principal extends PApplet {
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
 		//CorteLineas cortador = new CorteLineas();
-//		Poligono x = MatrixTransform2D.rotate(general, rot);
-//		x = MatrixTransform2D.scale(x, 1 / fact);
-//		x = cortador.recorte(x, ventana.getXmin(), ventana.getYmin(),
-//				ventana.getXmax(), ventana.getYmax());
-//		x = MatrixTransform2D.centerOn(x, canvas.width / 2, canvas.height / 2);
-//		x.dibujar(canvas);
+		
+		Poligono x = matrixOfTransforms.applyInverseOn(general);
+		MatrixTransform2D xMOT = new MatrixTransform2D();
+		xMOT.translate((int)(canvas.width/2-x.getCenter().x), (int)(canvas.height/2-x.getCenter().y));
+		x = xMOT.applyOn(x);
+		x.dibujar(canvas);
 	}
 
 	// metodo que dibuja el poligono del mundo
