@@ -87,7 +87,12 @@ public class Principal extends PApplet {
 	public void setup() {
 		size(1000, 500);
 		background(0);
-
+		
+		ventana.getVertices().add(new PVector(0, 0));
+		ventana.getVertices().add(new PVector(0, 80));
+		ventana.getVertices().add(new PVector(200, 80));
+		ventana.getVertices().add(new PVector(200, 0));
+		
 		canvasRight = createGraphics(width / 2, height);
 		canvasLeft = createGraphics(width / 2, height);
 		matrixOfTransforms = new MatrixTransform2D();
@@ -160,23 +165,15 @@ public class Principal extends PApplet {
 	// metodo que dibuja la ventana que hará las transformaciones
 	public void dibujaFig(PGraphics canvas, float n, int a, int b) {
 
-		ventana.getVertices().clear();
-		ventana.getVertices().add(new PVector(0, 0));
-		ventana.getVertices().add(new PVector(0, 80));
-		ventana.getVertices().add(new PVector(200, 80));
-		ventana.getVertices().add(new PVector(200, 0));
-
 		canvas.fill(0, 0, 0, 0);
 		canvas.stroke(0);
 		canvas.strokeWeight(2);
 
 		//matrixOfTransforms.scale(n, ventana.getCenter());
-		matrixOfTransforms.translate((int)(a-ventana.getCenter().x), (int)(b-ventana.getCenter().y));
+		matrixOfTransforms.translate((int)(-ventana.getCenter().x), (int)(-ventana.getCenter().y));
 		//matrixOfTransforms.rotate(rot, ventana.getCenter());
 		ventana = matrixOfTransforms.applyOn(ventana);
-		System.out.println(a);
 		System.out.println(ventana.getCenter());
-		System.out.println((int)(a-ventana.getCenter().x));
 		ventana.dibujar(canvas);
 
 	}
