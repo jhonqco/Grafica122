@@ -15,6 +15,21 @@ public class Principal extends PApplet {
 	int m, n;
 	float rot = 0;
 	Poligono ventana = new Poligono();
+	private MatrixTransform2D matrixOfTransforms;
+	
+	/*VARIABLES PARA HACER EL BRAZO*/
+
+	boolean moverBrazo=false;
+	boolean f=false;
+	boolean s=false;
+	boolean t=false;
+	int numSeg=3;
+	int segLenght=80;
+	float angle[]={0,1,1};
+	float x[]={0,segLenght,segLenght*2};
+	float y[]={0,0,0};
+	int ox=250;
+	int oy=250;
 
 	// metodo para guardar la posicion del mouse
 	public void mList() {
@@ -31,18 +46,41 @@ public class Principal extends PApplet {
 		moved = true;
 	}
 
+/*cAMBIAR EL METODO DE LAS TECLAS PARA LA INTERACCION CON EL BRAZO*/
+	
 	// metodo que determina los cursos de accion segun la tecla presionada
 	public void keyPressed() {
 		if (key == 'd' || key == 'D') {
 			dibujar = true;
 			agregar = !agregar;
 			estatico = !estatico;
-		} else if (key == 'e' || key == 'E') {
+		} 
+		else if (key == 'e' || key == 'E') {
 			dibujar = false;
 			general = new Poligono();
-		} else if (key == 'r' || key == 'R') {
+		}
+		else if (key == 'r' || key == 'R') {
 			rot = rot + (float) (3.14 / 8);
 		}
+		else if(key == 'f' || key == 'F'){
+			f=!f;
+			s=false;
+			t=false;
+		}
+		else if(key == 's' || key == 'S'){
+			s=!s;
+			f=false;
+			t=false;
+		}
+		else if(key == 't' || key == 'T'){
+			t=!t;
+			s=false;
+			f=false;
+		}
+		else if(key == 'm' || key == 'M'){
+			moverBrazo= !moverBrazo;
+		}
+		
 	}
 
 	// SETUP
@@ -52,6 +90,7 @@ public class Principal extends PApplet {
 
 		canvasRight = createGraphics(width / 2, height);
 		canvasLeft = createGraphics(width / 2, height);
+		matrixOfTransforms = new MatrixTransform2D();
 
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent mwe) {
@@ -82,16 +121,15 @@ public class Principal extends PApplet {
 	}
 
 	private void dibujaderecha(PGraphics canvas) {
-		// TODO Auto-generated method stub
 		canvas.strokeWeight(3);
 		canvas.line(0, 0, 0, height);
 		canvas.strokeWeight(2);
-		CorteLineas cortador = new CorteLineas();
-		Poligono x = Transform2D.rotate(general, rot);
-		x = Transform2D.scale(x, 1 / fact);
-		x = cortador.recorte(x, ventana.getXmin(), ventana.getYmin(),
-				ventana.getXmax(), ventana.getYmax());
-		x = Transform2D.centerOn(x, canvas.width / 2, canvas.height / 2);
+		//CorteLineas cortador = new CorteLineas();
+		
+		Poligono x = matrixOfTransforms.applyInverseOn(general);
+		MatrixTransform2D xMOT = new MatrixTransform2D();
+		xMOT.translate((int)(canvas.width/2-x.getCenter().x), (int)(canvas.height/2-x.getCenter().y));
+		x = xMOT.applyOn(x);
 		x.dibujar(canvas);
 	}
 
@@ -114,26 +152,13 @@ public class Principal extends PApplet {
 	public void dibMundo(PGraphics canvas) {
 		drawAxis(canvas);
 		mList();
+		moveArm();
+		snake(canvas);
 		dibujaFig(canvas, fact, m, n);
 	}
 
 	// metodo que dibuja la ventana que hará las transformaciones
 	public void dibujaFig(PGraphics canvas, float n, int a, int b) {
-		Poligono flecha = new Poligono();
-
-		flecha.getVertices().clear();
-		flecha.getVertices().add(new PVector(0, 0));
-		flecha.getVertices().add(new PVector(0, 80));
-		flecha.getVertices().add(new PVector(70, 80));
-		flecha.getVertices().add(new PVector(70, 100));
-		flecha.getVertices().add(new PVector(40, 100));
-		flecha.getVertices().add(new PVector(100, 140));
-		flecha.getVertices().add(new PVector(160, 100));
-		flecha.getVertices().add(new PVector(130, 100));
-		flecha.getVertices().add(new PVector(130, 80));
-		flecha.getVertices().add(new PVector(200, 80));
-		flecha.getVertices().add(new PVector(200, 0));
-		flecha.getVertices().add(new PVector(0, 0));
 
 		ventana.getVertices().clear();
 		ventana.getVertices().add(new PVector(0, 0));
@@ -145,29 +170,38 @@ public class Principal extends PApplet {
 		canvas.stroke(0);
 		canvas.strokeWeight(2);
 
-		flecha = Transform2D.scale(flecha, n);
-		flecha = Transform2D.centerOn(flecha, a, b);
-		flecha = Transform2D.rotate(flecha, rot);
-		flecha.dibujar(canvas);
-
-		ventana = Transform2D.scale(flecha, n);
-		ventana = Transform2D.centerOn(flecha, a, b);
-		ventana = Transform2D.rotate(flecha, rot);
+		//matrixOfTransforms.scale(n, ventana.getCenter());
+		matrixOfTransforms.translate((int)(a-ventana.getCenter().x), (int)(b-ventana.getCenter().y));
+		//matrixOfTransforms.rotate(rot, ventana.getCenter());
+		ventana = matrixOfTransforms.applyOn(ventana);
+		System.out.println(a);
+		System.out.println(ventana.getCenter());
+		System.out.println((int)(a-ventana.getCenter().x));
 		ventana.dibujar(canvas);
 
 	}
 
+	/*METODO SNAKE REFORMADO*/
 	public void snake(PGraphics canvas) {
-		canvas.strokeWeight(4);
-		// primer segmento
+		
+		
+		movimiento();
+		inicioSeg(0,1);
+		inicioSeg(1,2);
+		
+		
+		//DIBUJO DEL BRAZO
+		canvas.strokeWeight(10);
+		//primersegmento
 		canvas.stroke(250, 0, 0);
-
+		segment(x[0],y[0],angle[0],canvas);
 		// segundo segmento
 		canvas.stroke(0, 250, 0);
+		segment(x[1],y[1],angle[1],canvas);
 
 		// tercer segmento
 		canvas.stroke(0, 0, 250);
-
+		segment(x[2],y[2],angle[2],canvas);
 	}
 
 	// metodo que dibuja los ejes
@@ -190,5 +224,55 @@ public class Principal extends PApplet {
 		canvas.line(0, 250, 500, 250);
 
 	}
+	
+	/*METODOS A AGREGAR*/
+
+	//METODO para mover el brazo desde su posicion inicial
+	private void moveArm() {
+		if(moverBrazo){
+			x[0]=mouseX;
+			y[0]=mouseY;
+		}
+		
+	}
+	
+
+	//METODO PARA ASOCIAR EL MOVIMIENTO DE CADA SEGMENTO
+	void movimiento(){
+		if(f){
+			reachSegment(0);
+		}
+		if(s){
+			reachSegment(1);
+		}
+		if(t){
+			reachSegment(2);
+		}
+	}
+
+	//metodo para calcular el angulo del segmento dado
+	void reachSegment(int i) {
+		  float dx = mouseX - x[i];
+		  float dy = mouseY - y[i];
+		  angle[i] = atan2(dy, dx);
+	 }
+
+	//METODO PARA CALCULAR EL PUNTO INICIAL DE CADA SEGMENTO	
+	public void inicioSeg(int a, int b){
+		x[b]=x[a]+(cos(angle[a])*segLenght);
+		y[b]=y[a]+(sin(angle[a])*segLenght);
+	}
+	
+
+	/*metodo encargado de dibujar un segmento de recta, recibiendo la posicion inicial
+	  el angulo, y el canvas para dibujarlo*/
+	public void segment(float x, float y, float a,PGraphics canvas) {
+	  canvas.pushMatrix();
+	  canvas.translate(x, y);
+	  canvas.rotate(a);
+	  canvas.line(0, 0, segLenght, 0);
+	  canvas.popMatrix();
+	}
+
 
 }
