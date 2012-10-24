@@ -12,26 +12,31 @@ public class MatrixTransform2D {
 		transformsMatrix = new Array2DRowRealMatrix(identity);
 		inverseTransformsMatrix = new Array2DRowRealMatrix(identity);
 	}
-
-	public void translate(int dx, int dy) {
+	public void translate(int dx, int dy){
+		this.translate(dx, dy,true);
+	}
+	private void translate(int dx, int dy, boolean affectInverse) {
 
 		double[][] t = { { 1, 0, dx }, { 0, 1, dy }, { 0, 0, 1 } };
 
 		RealMatrix T = new Array2DRowRealMatrix(t);
 
 		transformsMatrix = transformsMatrix.preMultiply(T);
+		if(affectInverse == false){
+			inverseTransformsMatrix = inverseTransformsMatrix.preMultiply(T);
+			return;
+		}
 
 		t = new double[][] { { 1, 0, -dx }, { 0, 1, -dy }, { 0, 0, 1 } };
 
 		T = new Array2DRowRealMatrix(t);
 		inverseTransformsMatrix = inverseTransformsMatrix.preMultiply(T);
-
 	}
 
 	public void scale(float s, PVector center) {
 		s = Math.abs(s);
 		// Transladar al origen
-		translate((int) -center.x, (int) -center.y);
+		translate((int) -center.x, (int) -center.y,false);
 
 		// Escalar
 		double[][] t = { { s, 0, 0 }, { 0, s, 0 }, { 0, 0, 1 } };
@@ -44,13 +49,13 @@ public class MatrixTransform2D {
 		inverseTransformsMatrix = inverseTransformsMatrix.preMultiply(S);
 
 		// Transladar al la ubicacion original
-		translate((int) center.x, (int) center.y);
+		translate((int) center.x, (int) center.y,false);
 
 	}
 
 	public void rotate(float angleInRadians, PVector pivot) {
 		// Transladar al origen
-		translate((int) -pivot.x, (int) -pivot.y);
+		translate((int) -pivot.x, (int) -pivot.y,false);
 
 		// Rotar el poligono
 		double[][] t = { { Math.cos(angleInRadians), -Math.sin(angleInRadians), 0 },
@@ -63,7 +68,7 @@ public class MatrixTransform2D {
 		inverseTransformsMatrix = inverseTransformsMatrix.preMultiply(R);
 
 		// Transladar al la ubicacion original
-		translate((int) pivot.x, (int) pivot.y);
+		translate((int) pivot.x, (int) pivot.y,false);
 	}
 
 	public Poligono applyOn(Poligono polygon) {
@@ -82,11 +87,11 @@ public class MatrixTransform2D {
 			RealMatrix punto = new Array2DRowRealMatrix(puntoData);
 
 			// Aplicar trasformaciones
-			punto = punto.preMultiply(matrix);
+			RealMatrix nuevoPunto = punto.preMultiply(matrix);
 
 			// Pasar de RealMatrix a PVector
-			float x = (float) punto.getEntry(0, 0);
-			float y = (float) punto.getEntry(1, 0);
+			float x = (float) nuevoPunto.getEntry(0, 0);
+			float y = (float) nuevoPunto.getEntry(1, 0);
 			PVector nuevoVertice = new PVector(x, y);
 
 			// Guardar nuevo vertice
