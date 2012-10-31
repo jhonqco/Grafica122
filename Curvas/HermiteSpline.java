@@ -1,6 +1,7 @@
 
 import processing.core.*;
 //import remixlab.proscene.*;
+import remixlab.proscene.Scene;
 
 public class HermiteSpline extends PApplet{
 
@@ -13,13 +14,18 @@ public class HermiteSpline extends PApplet{
 	boolean punto2=false;
 	boolean vector1=false;
 	boolean vector2=false;
-	//double Interpolacion = new double [][]({2,-2,1,1},{-3,3,-2,-1},{0,0,1,0},{1,0,0,0});
-	
-	
+	private Scene scene;
 	
 	
 	public void setup(){
-		size(500,500);
+		size(500,500,P3D);
+		int nbKeyFrames = 4;
+		scene = new Scene(this);
+		scene.setAxisIsDrawn(false);
+		scene.setGridIsDrawn(false);
+		scene.setRadius(70);
+		scene.showAll();
+		scene.setFrameSelectionHintIsDrawn(true);
 	}
 	
 	public void draw(){
@@ -48,6 +54,7 @@ public class HermiteSpline extends PApplet{
 	public void curva(){
 		float dx=0;
 		float dy=0;
+		float dz=0;
 		float a,b,c,d;
 		strokeWeight(2);
 		stroke(250,100,100);
@@ -58,7 +65,8 @@ public class HermiteSpline extends PApplet{
 			d=pow(u,3)-pow(u,2);
 			dx=(x[0]*a)+(x[3]*b)+(x[1]*c)+(x[2]*d);
 			dy=(y[0]*a)+(y[3]*b)+(y[1]*c)+(y[2]*d);
-			point(dx,dy);
+			dz=(z[0]*a)+(z[3]*b)+(z[1]*c)+(z[2]*d);
+			point(dx,dy,dz);
 		}
 	}
 	

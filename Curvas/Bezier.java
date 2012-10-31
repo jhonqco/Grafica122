@@ -120,7 +120,7 @@ public class Bezier extends PApplet {
 
 		RealMatrix mBezMultiplyPoints = mBez.multiply(points);
 
-		for (float u = 0; u <= 1; u += 0.01) {
+		for (float u = 0; u <= 1; u += 0.006) {
 			RealMatrix U = new Array2DRowRealMatrix(new double[][]
 				{
 					{ pow(u, 3), pow(u, 2), u, 1 } });
@@ -133,7 +133,7 @@ public class Bezier extends PApplet {
 			pushMatrix();
 			translate(puPosition.x, puPosition.y, puPosition.z);
 			pushStyle();
-			fill(255, 0, 0);
+			fill(0, 255, 0);
 			noStroke();
 			scene.parent.sphere(1);
 			popStyle();
@@ -150,6 +150,7 @@ public class Bezier extends PApplet {
 	}
 
 	public void removeFirstControlPoint() {
+		scene.mouseGrabberPool().remove(keyFrames.get(0));
 		keyFrames.remove(0);
 	}
 }
