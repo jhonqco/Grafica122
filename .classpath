@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="build/classes/|build/|PipeLine2d/|Librerias/|Circunferencias y elipses/|Circunferencias y elipses/|Lineas Bresenham/|Lineas Bresenham/|PipeLine2d/|Relleno poligonos/|Relleno poligonos/" kind="src" path=""/>
+	<classpathentry kind="src" path="Curvas y superficies"/>
 	<classpathentry kind="src" path="Circunferencias y elipses"/>
 	<classpathentry kind="src" path="Lineas Bresenham"/>
 	<classpathentry kind="src" path="PipeLine2d"/>
