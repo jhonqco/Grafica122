@@ -16,6 +16,7 @@ public class Bezier extends PApplet {
 	ArrayList<InteractiveFrame> keyFrames;
 	private ClickButton button1;
 	private ClickButton button2;
+	float deltaU = (float) 0.001;
 
 	public void setup() {
 		size(640, 480, P3D);
@@ -23,14 +24,14 @@ public class Bezier extends PApplet {
 		scene = new Scene(this);
 		scene.setAxisIsDrawn(false);
 		scene.setGridIsDrawn(false);
-		scene.setRadius(70);
+		scene.setRadius(80);
 		scene.showAll();
 		scene.setFrameSelectionHintIsDrawn(true);
 
 		// Buttons
-		button1 = new ClickButton(scene, new PVector(10, 10), "+", 32, true, this);
-		button2 = new ClickButton(scene, new PVector((10 + button1.myWidth + 5), 10), "-", 32,
-				false, this);
+		button1 = new ClickButton(scene, new PVector(width / 2, 10), "+", 32, true, this);
+		button2 = new ClickButton(scene, new PVector((button1.position.x + button1.myWidth + 5),
+				button1.position.y), "-", 32, false, this);
 
 		// An array of interactive (key) frames.
 		keyFrames = new ArrayList<InteractiveFrame>(nbKeyFrames);
@@ -51,9 +52,9 @@ public class Bezier extends PApplet {
 			pushMatrix();
 			PVector position = keyFrames.get(i).position();
 			translate(position.x, position.y, position.z);
-			if (keyFrames.get(i).grabsMouse())
-				scene.drawAxis(40);
-			else
+			if (keyFrames.get(i).grabsMouse()) {
+				scene.drawAxis(30);
+			} else
 				scene.drawAxis(20);
 
 			popMatrix();
@@ -73,32 +74,30 @@ public class Bezier extends PApplet {
 	private void generalBezier() {
 		int n = keyFrames.size() - 1;
 
-		for (float u = 0; u <= 1; u += 0.01) {
+		for (float u = 0; u <= 1; u += deltaU) {
 			PVector pu = new PVector(0, 0, 0);
-			
+
 			for (int k = 0; k <= n; k++) {
 				PVector pk = keyFrames.get(k).position();
 				pk.mult(BEZ(k, n, u));
 				pu.add(pk);
 			}
-			
-			pushMatrix();
-			translate(pu.x, pu.y, pu.z);
-			pushStyle();
-			fill(255, 0, 0);
-			noStroke();
-			scene.parent.sphere(1);
-			popStyle();
-			popMatrix();
+
+			this.drawPU(pu, 255, 0, 0);
 		}
 	}
 
 	private float BEZ(int k, int n, float u) {
-		float bez = ArithmeticUtils.binomialCoefficient(n, k);
-		bez = (float) (bez * Math.pow(u, k));
-		bez = (float) (bez * Math.pow((1 - u), (n - k)));
-
-		return bez;
+		if (k == n) {
+			return (float) Math.pow(u, k);
+		} else if (k == 0) {
+			return (float) Math.pow((1 - u), (n));
+		} else {
+			float bez = ArithmeticUtils.binomialCoefficient(n, k);
+			bez = (float) (bez * Math.pow(u, k));
+			bez = (float) (bez * Math.pow((1 - u), (n - k)));
+			return bez;
+		}
 	}
 
 	private void cubicBezier() {
@@ -120,31 +119,32 @@ public class Bezier extends PApplet {
 
 		RealMatrix mBezMultiplyPoints = mBez.multiply(points);
 
-		for (float u = 0; u <= 1; u += 0.006) {
+		for (float u = 0; u <= 1; u += deltaU) {
 			RealMatrix U = new Array2DRowRealMatrix(new double[][]
 				{
 					{ pow(u, 3), pow(u, 2), u, 1 } });
 
 			RealMatrix pu = U.multiply(mBezMultiplyPoints);
 
-			PVector puPosition = new PVector((int) pu.getEntry(0, 0), (int) pu.getEntry(0, 1),
-					(int) pu.getEntry(0, 2));
+			PVector puPosition = new PVector((float) pu.getEntry(0, 0), (float) pu.getEntry(0, 1),
+					(float) pu.getEntry(0, 2));
 
-			pushMatrix();
-			translate(puPosition.x, puPosition.y, puPosition.z);
-			pushStyle();
-			fill(0, 255, 0);
-			noStroke();
-			scene.parent.sphere(1);
-			popStyle();
-			popMatrix();
+			this.drawPU(puPosition, 0, 255, 0);
+
 		}
+	}
+
+	private void drawPU(PVector puPosition, int red, int green, int blue) {
+		pushStyle();
+		stroke(red, green, blue);
+		scene.parent.point(puPosition.x, puPosition.y, puPosition.z);
+		popStyle();
 	}
 
 	public void addControlPoint() {
 		InteractiveFrame newIFrame = new InteractiveFrame(scene);
 		newIFrame.setPosition(scene.camera().unprojectedCoordinatesOf(
-				new PVector(mouseX, mouseY, (float) 0.8)));
+				new PVector(random(width / 2, width), random(height / 2, height), (float) 0.8)));
 
 		keyFrames.add(newIFrame);
 	}
