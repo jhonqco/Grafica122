@@ -83,11 +83,11 @@ public class Bezier extends PApplet {
 				pu.add(pk);
 			}
 
-			this.drawPU(pu, 255, 0, 0);
+			this.drawPoint(pu, 255, 0, 0);
 		}
 	}
 
-	private float BEZ(int k, int n, float u) {
+	public static float BEZ(int k, int n, float u) {
 		if (k == n) {
 			return (float) Math.pow(u, k);
 		} else if (k == 0) {
@@ -129,12 +129,12 @@ public class Bezier extends PApplet {
 			PVector puPosition = new PVector((float) pu.getEntry(0, 0), (float) pu.getEntry(0, 1),
 					(float) pu.getEntry(0, 2));
 
-			this.drawPU(puPosition, 0, 255, 0);
+			this.drawPoint(puPosition, 0, 255, 0);
 
 		}
 	}
 
-	private void drawPU(PVector puPosition, int red, int green, int blue) {
+	private void drawPoint(PVector puPosition, int red, int green, int blue) {
 		pushStyle();
 		stroke(red, green, blue);
 		scene.parent.point(puPosition.x, puPosition.y, puPosition.z);
