@@ -1,4 +1,7 @@
 import processing.core.PApplet;
+import processing.core.PGraphics;
+import processing.core.PVector;
+import processing.opengl.PGraphicsOpenGL;
 import remixlab.proscene.CameraProfile;
 import remixlab.proscene.Scene;
 
@@ -21,11 +24,15 @@ public class PointUnderPixel extends PApplet{
 
 	Scene scene;
 	Box [] boxes;
+	private PGraphics canvas;
+	private PGraphics derecho;
 
 	public void setup() {
-	  size(640, 360, OPENGL);
+	  size(640, 480, P3D);
 	  hint(DISABLE_DEPTH_TEST);
-	  scene = new Scene(this);
+	  canvas = createGraphics(width/2, height,P3D);
+	  derecho = createGraphics(width/2, height);
+	  scene = new Scene(this,(PGraphicsOpenGL) canvas);
 	  scene.setShortcut('f', Scene.KeyboardAction.DRAW_FRAME_SELECTION_HINT);
 	  scene.setShortcut('z', Scene.KeyboardAction.ARP_FROM_PIXEL);
 	  //add the click actions to all camera profiles
@@ -43,17 +50,50 @@ public class PointUnderPixel extends PApplet{
 
 	  scene.setGridIsDrawn(false);
 	  scene.setAxisIsDrawn(false);
-	  scene.setRadius(150);
+	  scene.setRadius(200);
+	  scene.enableFrustumEquationsUpdate();
+	  scene.addDrawHandler(this, "mainDrawing");
 	  scene.showAll();
 	  boxes = new Box[50];
 	  // create an array of boxes with random positions, sizes and colors
 	  for (int i = 0; i < boxes.length; i++)
 	    boxes[i] = new Box(scene);
+	  boxes[0].setPosition(new PVector(width/2, height/2, boxes[0].getPosition().z));
 	}
 
+	public void mainDrawing(Scene s){
+		PGraphicsOpenGL p = s.renderer();
+		p.background(0);
+		  for (int i = 0; i < boxes.length; i++){    
+		    boxes[i].draw();
+		  }
+	}
+	
 	public void draw() {
-	  background(0);
-	  for (int i = 0; i < boxes.length; i++)    
-	    boxes[i].draw();
+		
+		if(mouseX > width/2){
+			scene.disableMouseHandling();
+		}else{
+			scene.enableMouseHandling();
+		}
+		
+	  canvas.beginDraw();
+	  scene.beginDraw();
+	  scene.endDraw();
+	  canvas.endDraw();
+	  image(canvas, 0, 0);
+	  
+	  System.out.print(boxes[0].getPosition()+"\t");
+	  PVector window = scene.camera().projectedCoordinatesOf(boxes[0].getPosition());
+	  System.out.println(window);
+	  
+	  derecho.beginDraw();
+	  derecho.background(0);
+	  derecho.stroke(255,0,0);
+	  derecho.strokeWeight(5);
+	  derecho.ellipse(window.x, window.y, 5, 5);
+	  derecho.endDraw();
+	  
+	  image(derecho,width/2,0,width,height);
 	}
 }

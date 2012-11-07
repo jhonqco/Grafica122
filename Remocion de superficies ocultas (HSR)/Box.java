@@ -63,7 +63,7 @@ public class Box {
     else
     	pApplet.fill(getColor());
     //Draw a box
-    pApplet.box(w,h,d);
+    scene.renderer().box(w,h,d);
     pApplet.popStyle();
     pApplet.popMatrix();
   }
