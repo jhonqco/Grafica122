@@ -26,8 +26,6 @@ public class PointUnderPixel extends PApplet {
 		// add the click actions to all camera profiles
 		CameraProfile[] camProfiles = scene.getCameraProfiles();
 		for (int i = 0; i < camProfiles.length; i++) {
-			// left click will zoom on pixel:
-			camProfiles[i].setClickBinding(Scene.Button.LEFT, Scene.ClickAction.ZOOM_ON_PIXEL);
 			// middle click will show all the scene:
 			camProfiles[i].setClickBinding(Scene.Button.MIDDLE, Scene.ClickAction.SHOW_ALL);
 			// right click will will set the arcball reference point:

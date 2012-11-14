@@ -14,8 +14,6 @@ public class Hermite2 extends PApplet {
 
 	Scene scene;
 	ArrayList<InteractiveFrame> keyFrames;
-	private ClickButton button1;
-	private ClickButton button2;
 	float deltaU = (float) 0.001;
 
 	public void setup() {
