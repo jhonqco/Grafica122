@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -9,9 +11,10 @@ import remixlab.proscene.Scene;
 public class PointUnderPixel extends PApplet {
 
 	Scene scene;
-	Box[] boxes;
+	ArrayList<Box> boxes;
 	private PGraphics canvas;
 	private PGraphics derecho;
+	private Pintor pintor;
 
 	public void setup() {
 		size(640, 480, P3D);
@@ -41,18 +44,21 @@ public class PointUnderPixel extends PApplet {
 		scene.enableFrustumEquationsUpdate();
 		scene.addDrawHandler(this, "mainDrawing");
 		scene.showAll();
-		boxes = new Box[50];
+		boxes = new ArrayList<Box>(50);
 		// create an array of boxes with random positions, sizes and colors
-		for (int i = 0; i < boxes.length; i++)
-			boxes[i] = new Box(scene);
-		boxes[0].setPosition(new PVector(width / 2, height / 2, boxes[0].getPosition().z));
+		for (int i = 0; i < 50; i++){
+			boxes.add(new Box(scene));
+
+		}		
+		pintor = new Pintor();
+		pintor.setPlanos(boxes);
 	}
 
 	public void mainDrawing(Scene s) {
 		PGraphicsOpenGL p = s.renderer();
 		p.background(0);
-		for (int i = 0; i < boxes.length; i++) {
-			boxes[i].draw();
+		for (int i = 0; i < boxes.size(); i++) {
+			boxes.get(i).draw();
 		}
 	}
 
@@ -71,13 +77,13 @@ public class PointUnderPixel extends PApplet {
 		canvas.endDraw();
 		image(canvas, 0, 0);
 
-		System.out.print(boxes[0].getPosition() + "\t");
-		PVector window = scene.camera().projectedCoordinatesOf(boxes[0].getPosition());
-		System.out.println(window);
 		derecho.beginDraw();
 		derecho.background(255);
-		derecho.stroke(255, 0, 0);
-		derecho.ellipse(window.x, window.y, 5, 5);
+		derecho.fill(0);
+		derecho.rect(10, 10, 20, 20);
+		
+		pintor.dibujarPlanos(derecho);
+		
 		derecho.endDraw();
 
 		image(derecho, width / 2, 0);
