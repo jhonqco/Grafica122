@@ -2,27 +2,31 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PVector;
 import processing.opengl.PGraphicsOpenGL;
 import remixlab.proscene.CameraProfile;
 import remixlab.proscene.Scene;
 
+/**
+ * @author Sebastian
+ * 
+ */
 @SuppressWarnings("serial")
-public class PointUnderPixel extends PApplet {
+public class PrincipalHSR extends PApplet {
 
-	Scene scene;
-	ArrayList<Box> boxes;
-	private PGraphics canvas;
-	private PGraphics derecho;
+	private Scene scene;
+	private ArrayList<Box> boxes;
+	private PGraphics leftCanvas;
+	private PGraphics rightCanvas;
 	private Pintor pintor;
 
 	public void setup() {
+		int numberOfBoxes = 50;
+
 		size(640, 480, P3D);
-		canvas = createGraphics(width / 2, height, P3D);
-		derecho = createGraphics(width / 2, height);
-		scene = new Scene(this, (PGraphicsOpenGL) canvas);
-		scene.setShortcut('f', Scene.KeyboardAction.DRAW_FRAME_SELECTION_HINT);
-		scene.setShortcut('z', Scene.KeyboardAction.ARP_FROM_PIXEL);
+		leftCanvas = createGraphics(width / 2, height, P3D);
+		rightCanvas = createGraphics(width / 2, height);
+		scene = new Scene(this, (PGraphicsOpenGL) leftCanvas);
+
 		// add the click actions to all camera profiles
 		CameraProfile[] camProfiles = scene.getCameraProfiles();
 		for (int i = 0; i < camProfiles.length; i++) {
@@ -40,50 +44,44 @@ public class PointUnderPixel extends PApplet {
 		scene.setAxisIsDrawn(false);
 		scene.setRadius(200);
 		scene.enableFrustumEquationsUpdate();
-		scene.addDrawHandler(this, "mainDrawing");
 		scene.showAll();
-		boxes = new ArrayList<Box>(50);
+
+		boxes = new ArrayList<Box>(numberOfBoxes);
 		// create an array of boxes with random positions, sizes and colors
-		for (int i = 0; i < 50; i++){
+		for (int i = 0; i < numberOfBoxes; i++) {
 			boxes.add(new Box(scene));
 
-		}		
+		}
 		pintor = new Pintor();
 		pintor.setPlanos(boxes);
 	}
 
-	public void mainDrawing(Scene s) {
-		PGraphicsOpenGL p = s.renderer();
-		p.background(0);
-		for (int i = 0; i < boxes.size(); i++) {
-			boxes.get(i).draw();
-		}
-	}
-
 	public void draw() {
-
-		if (mouseX > width / 2) {
+		leftCanvas.beginDraw();
+		leftCanvas.hint(PGraphics.DISABLE_DEPTH_TEST);
+		// Manejar eventos mouse segun posicion
+		if (mouseX > leftCanvas.width) {
 			scene.disableMouseHandling();
 		} else {
 			scene.enableMouseHandling();
 		}
 
-		canvas.beginDraw();
-		canvas.hint(PGraphics.DISABLE_DEPTH_TEST);
 		scene.beginDraw();
+		scene.renderer().background(0);
+		for (int i = 0; i < boxes.size(); i++) {
+			boxes.get(i).draw();
+		}
 		scene.endDraw();
-		canvas.endDraw();
-		image(canvas, 0, 0);
+		leftCanvas.endDraw();
+		image(leftCanvas, 0, 0);
 
-		derecho.beginDraw();
-		derecho.background(255);
-		derecho.fill(0);
-		derecho.rect(10, 10, 20, 20);
-		
-		pintor.dibujarPlanos(derecho);
-		
-		derecho.endDraw();
+		// Dibujar canvas derecho
+		rightCanvas.beginDraw();
+		rightCanvas.background(255);
 
-		image(derecho, width / 2, 0);
+		pintor.dibujarPlanos(rightCanvas);
+
+		rightCanvas.endDraw();
+		image(rightCanvas, width / 2, 0);
 	}
 }
