@@ -68,8 +68,8 @@ public class PrincipalHSR extends PApplet {
 
 		scene.beginDraw();
 		scene.renderer().background(0);
-		for (int i = 0; i < boxes.size(); i++) {
-			boxes.get(i).draw();
+		for (Box box: boxes) {
+			box.draw();
 		}
 		scene.endDraw();
 		leftCanvas.endDraw();

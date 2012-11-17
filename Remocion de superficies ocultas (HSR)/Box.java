@@ -8,11 +8,11 @@ import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
 
 public class Box {
-	private ArrayList<PVector> vertices = new ArrayList<PVector>(8);
+	private ArrayList<Triangle3D> vertices = new ArrayList<Triangle3D>();
 
-	InteractiveFrame iFrame;
-	float width, height, depth;
-	int color;
+	private InteractiveFrame iFrame;
+	private float width, height, depth;
+	private int color;
 	private PGraphics canvas;
 	private Scene scene;
 
@@ -26,10 +26,7 @@ public class Box {
 		height = scene.parent.random(10, 40);
 		depth = scene.parent.random(10, 40);
 
-		vertices.clear();
-		vertices.add(new PVector(0, 0, 0));
-		vertices.add(new PVector(0, height, 0));
-		vertices.add(new PVector(width, 0, 0));
+		vertices.add(new Triangle3D(new PVector(width, 0),new PVector(0, height, 0)));
 
 		// sets color randomly
 		color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
@@ -52,13 +49,9 @@ public class Box {
 		} else
 			canvas.fill(getColor());
 		// Draw a box
-		// canvas.box(w, h, d);
-		canvas.stroke(this.getColor());
-		canvas.beginShape();
-		for (PVector vertice : vertices) {
-			canvas.vertex(vertice.x, vertice.y, vertice.z);
+		for (Triangle3D vertice : vertices) {
+			vertice.drawOn(canvas);
 		}
-		canvas.endShape(PGraphics.CLOSE);
 
 		canvas.popStyle();
 		canvas.popMatrix();
@@ -109,15 +102,16 @@ public class Box {
 		canvas.fill(getColor());
 		canvas.stroke(getColor());
 		
-		PVector position = scene.camera().projectedCoordinatesOf(iFrame.position());
-		System.out.println(position);
+		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
 		canvas.translate(position.x,position.y);
 		
-		canvas.stroke(this.getColor());
 		canvas.beginShape();
-		for (PVector vertice : vertices) {
-			PVector cameraVertice = scene.camera().projectedCoordinatesOf(vertice);
-			canvas.vertex(cameraVertice.x, cameraVertice.y);
+		for (Triangle3D vertice : vertices) {
+			for(PVector point: vertice.getPoints()){
+			PVector cameraVertice = iFrame.coordinatesOf(point); 
+			cameraVertice = scene.camera().projectedCoordinatesOf(cameraVertice);
+			canvas.vertex(cameraVertice.array());
+			}
 		}
 		canvas.endShape(PGraphics.CLOSE);
 

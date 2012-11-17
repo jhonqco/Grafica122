@@ -26,6 +26,6 @@ class ChairWeightComparator implements Comparator<Box> {
 	@Override
 	public int compare(Box arg0, Box arg1) {
 		
-		return (int) (arg0.depth-arg1.depth);
+		return 0;
 	}
 }
