@@ -15,7 +15,8 @@ public class Box {
 	int color;
 	private PGraphics canvas;
 	private Scene scene;
-
+	ArrayList<Triangle3D> triangles;
+	
 	Box(Scene scene) {
 		iFrame = new InteractiveFrame(scene);
 		canvas = scene.renderer();
@@ -30,6 +31,9 @@ public class Box {
 		vertices.add(new PVector(0, 0, 0));
 		vertices.add(new PVector(0, height, 0));
 		vertices.add(new PVector(width, 0, 0));
+		
+		//set box's triangles
+		setTriangles();
 
 		// sets color randomly
 		color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
@@ -69,6 +73,36 @@ public class Box {
 		height = myH;
 		depth = myD;
 	}
+
+	public void setTriangles(){
+		Triangle3D triangle;
+		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,width,0),new PVector(0,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(0,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,height),new PVector(0,width,height),new PVector(depth,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,height),new PVector(depth,0,height),new PVector(depth,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(depth,0,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,height),new PVector(depth,0,0));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,width,0),new PVector(depth,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,0,height),new PVector(depth,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,0),new PVector(0,width,0));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(depth,width,0),new PVector(depth,0,0),new PVector(0,width,0));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,width,0),new PVector(depth,width,0),new PVector(depth,width,height));
+		triangles.add(triangle);
+		triangle=new Triangle3D(new PVector(0,width,0),new PVector(0,width,height),new PVector(depth,width,height));
+		triangles.add(triangle);
+	}
+
+
 
 	public int getColor() {
 		return color;
