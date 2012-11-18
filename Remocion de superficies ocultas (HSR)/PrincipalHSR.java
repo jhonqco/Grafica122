@@ -20,7 +20,7 @@ public class PrincipalHSR extends PApplet {
 	private Pintor pintor;
 
 	public void setup() {
-		int numberOfBoxes = 50;
+		int numberOfBoxes = 40;
 
 		size(640, 480, P3D);
 		leftCanvas = createGraphics(width / 2, height, P3D);
@@ -53,7 +53,6 @@ public class PrincipalHSR extends PApplet {
 
 		}
 		pintor = new Pintor();
-		pintor.setPlanos(boxes);
 	}
 
 	public void draw() {
@@ -78,8 +77,12 @@ public class PrincipalHSR extends PApplet {
 		// Dibujar canvas derecho
 		rightCanvas.beginDraw();
 		rightCanvas.background(255);
-
-		pintor.dibujarPlanos(rightCanvas);
+		
+		ArrayList<Triangle3D> planos = new ArrayList<Triangle3D>();
+		for(Box box: boxes){
+			planos.addAll(box.getPlanesCameraCoord());
+		}
+		pintor.dibujarPlanos(rightCanvas,planos);
 
 		rightCanvas.endDraw();
 		image(rightCanvas, width / 2, 0);

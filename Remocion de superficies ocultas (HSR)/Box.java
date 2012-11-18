@@ -22,15 +22,17 @@ public class Box {
 		this.scene = scene;
 
 		// sets size randomly
-		width = scene.parent.random(10, 40);
-		height = scene.parent.random(10, 40);
-		depth = scene.parent.random(10, 40);
-
-		vertices.add(new Triangle3D(new PVector(width, 0),new PVector(0, height, 0)));
-
+		int maxSize=60;
+		int minSize=10;
+		width = scene.parent.random(minSize, maxSize);
+		height = scene.parent.random(minSize, maxSize);
+		depth = scene.parent.random(minSize, maxSize);
+		
 		// sets color randomly
-		color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
-				scene.parent.random(0, 255));
+				color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
+						scene.parent.random(0, 255));
+
+		vertices.add(new Triangle3D(new PVector(width, depth),new PVector(0, height, depth), color));
 
 		setPosition();
 	}
@@ -107,10 +109,9 @@ public class Box {
 		
 		canvas.beginShape();
 		for (Triangle3D vertice : vertices) {
-			for(PVector point: vertice.getPoints()){
-			PVector cameraVertice = iFrame.coordinatesOf(point); 
-			cameraVertice = scene.camera().projectedCoordinatesOf(cameraVertice);
-			canvas.vertex(cameraVertice.array());
+			for(PVector point: vertice.getPoints()){ 
+			PVector cameraVertice = scene.camera().projectedCoordinatesOf(point);
+			canvas.vertex(cameraVertice.x,cameraVertice.y);
 			}
 		}
 		canvas.endShape(PGraphics.CLOSE);
@@ -118,5 +119,20 @@ public class Box {
 		canvas.popStyle();
 		canvas.popMatrix();
 
+	}
+
+	public ArrayList<Triangle3D> getPlanesCameraCoord() {
+		ArrayList<Triangle3D> planes = new ArrayList<Triangle3D>(vertices.size());
+		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
+		for (Triangle3D vertice : vertices) {
+			PVector point1 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[0]);
+			point1.add(position);
+			PVector point2 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[1]);
+			point2.add(position);
+			PVector point3 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[2]);
+			point3.add(position);
+			planes.add(new Triangle3D(point1, point2, point3,color));
+		}
+		return planes;
 	}
 }
