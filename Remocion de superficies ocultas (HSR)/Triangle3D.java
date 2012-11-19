@@ -1,10 +1,9 @@
-import processing.core.PGraphics;
-import processing.core.PVector;
-import remixlab.proscene.Camera;
+import processing.core.*;
 
 
-public class Triangle3D {
+public class Triangle3D{
 	private PVector[] points;
+	
 
 	public Triangle3D(PVector point1, PVector point2, PVector point3) {
 		points = new PVector[3];
@@ -29,5 +28,13 @@ public class Triangle3D {
 	public PVector[] getPoints(){
 		return points;
 	}
+	
+	public String toString(){
+		String s= new String("El triangulo tiene los vertices: \nP1=("+points[0].x+","+points[0].y+","+points[0].z+")\nP2=("+points[1].x+","+points[1].y+","+points[1].z+")\nP3=("+points[2].x+","+points[2].y+","+points[2].z+")\n");
+		return s;
+	}
+	
+		
+	
 
 }

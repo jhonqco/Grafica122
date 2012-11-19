@@ -15,7 +15,8 @@ public class Box {
 	int color;
 	private PGraphics canvas;
 	private Scene scene;
-	ArrayList<Triangle3D> triangles;
+	ArrayList<Triangle3D> triangles= new ArrayList<Triangle3D>(12);
+	
 	
 	Box(Scene scene) {
 		iFrame = new InteractiveFrame(scene);
@@ -43,6 +44,7 @@ public class Box {
 	}
 
 	public void draw() {
+		
 		canvas.pushMatrix();
 		canvas.pushStyle();
 		// Multiply matrix to get in the frame coordinate system.
@@ -58,12 +60,13 @@ public class Box {
 		// Draw a box
 		// canvas.box(w, h, d);
 		canvas.stroke(this.getColor());
-		canvas.beginShape();
-		for (PVector vertice : vertices) {
-			canvas.vertex(vertice.x, vertice.y, vertice.z);
+		
+		
+		
+		for (int i=0;i<triangles.size();i++) {
+			this.triangles.get(i).drawOn(canvas);
 		}
-		canvas.endShape(PGraphics.CLOSE);
-
+		
 		canvas.popStyle();
 		canvas.popMatrix();
 	}
@@ -77,29 +80,29 @@ public class Box {
 	public void setTriangles(){
 		Triangle3D triangle;
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,width,0),new PVector(0,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(0,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,height),new PVector(0,width,height),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,height),new PVector(depth,0,height),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(depth,0,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,height),new PVector(depth,0,0));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,width,0),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,0,height),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,0),new PVector(0,width,0));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(depth,width,0),new PVector(depth,0,0),new PVector(0,width,0));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,width,0),new PVector(depth,width,0),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 		triangle=new Triangle3D(new PVector(0,width,0),new PVector(0,width,height),new PVector(depth,width,height));
-		triangles.add(triangle);
+		triangles.add(0,triangle);
 	}
 
 
