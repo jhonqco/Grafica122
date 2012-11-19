@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="PipeLine2d"/>
 	<classpathentry kind="src" path="Relleno poligonos"/>
 	<classpathentry kind="src" path="Remocion de superficies ocultas (HSR)"/>
+	<classpathentry kind="src" path="Utilidades"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

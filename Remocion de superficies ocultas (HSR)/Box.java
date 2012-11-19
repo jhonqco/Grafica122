@@ -22,7 +22,7 @@ public class Box {
 		this.scene = scene;
 
 		// sets size randomly
-		int maxSize=60;
+		int maxSize=50;
 		int minSize=10;
 		width = scene.parent.random(minSize, maxSize);
 		height = scene.parent.random(minSize, maxSize);
@@ -32,7 +32,7 @@ public class Box {
 				color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
 						scene.parent.random(0, 255));
 
-		vertices.add(new Triangle3D(new PVector(width, depth),new PVector(0, height, depth), color));
+		vertices.add(new Triangle3D(new PVector(width, 0),new PVector(0, height, 0), color));
 
 		setPosition();
 	}
@@ -96,29 +96,6 @@ public class Box {
 	public void setOrientation(PVector v) {
 		PVector to = PVector.sub(v, iFrame.position());
 		iFrame.setOrientation(new Quaternion(new PVector(0, 1, 0), to));
-	}
-
-	public void draw2D(PGraphics canvas) {
-		canvas.pushMatrix();
-		canvas.pushStyle();
-		canvas.fill(getColor());
-		canvas.stroke(getColor());
-		
-		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
-		canvas.translate(position.x,position.y);
-		
-		canvas.beginShape();
-		for (Triangle3D vertice : vertices) {
-			for(PVector point: vertice.getPoints()){ 
-			PVector cameraVertice = scene.camera().projectedCoordinatesOf(point);
-			canvas.vertex(cameraVertice.x,cameraVertice.y);
-			}
-		}
-		canvas.endShape(PGraphics.CLOSE);
-
-		canvas.popStyle();
-		canvas.popMatrix();
-
 	}
 
 	public ArrayList<Triangle3D> getPlanesCameraCoord() {

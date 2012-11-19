@@ -20,7 +20,7 @@ public class PrincipalHSR extends PApplet {
 	private Pintor pintor;
 
 	public void setup() {
-		int numberOfBoxes = 40;
+		int numberOfBoxes = 2;
 
 		size(640, 480, P3D);
 		leftCanvas = createGraphics(width / 2, height, P3D);
@@ -41,9 +41,10 @@ public class PrincipalHSR extends PApplet {
 		}
 
 		scene.setGridIsDrawn(false);
-		scene.setAxisIsDrawn(false);
+		scene.setAxisIsDrawn(true);
 		scene.setRadius(200);
 		scene.enableFrustumEquationsUpdate();
+		scene.setCameraPathsAreDrawn(true);
 		scene.showAll();
 
 		boxes = new ArrayList<Box>(numberOfBoxes);
@@ -59,11 +60,6 @@ public class PrincipalHSR extends PApplet {
 		leftCanvas.beginDraw();
 		leftCanvas.hint(PGraphics.DISABLE_DEPTH_TEST);
 		// Manejar eventos mouse segun posicion
-		if (mouseX > leftCanvas.width) {
-			scene.disableMouseHandling();
-		} else {
-			scene.enableMouseHandling();
-		}
 
 		scene.beginDraw();
 		scene.renderer().background(0);

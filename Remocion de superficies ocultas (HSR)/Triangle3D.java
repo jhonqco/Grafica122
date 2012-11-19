@@ -1,3 +1,5 @@
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -30,6 +32,15 @@ public class Triangle3D {
 		canvas.endShape(PGraphics.CLOSE);
 	}
 	
+	public PVector normal(){
+		PVector a = PVector.sub(points[1], points[0]);
+		PVector b = PVector.sub(points[2], points[0]);
+		Vector3D a2 = new Vector3D(a.x, a.y, a.z);
+		Vector3D b2 = new Vector3D(b.x, b.y, b.z);
+		Vector3D result = Vector3D.crossProduct(a2, b2);
+		return new PVector((float)result.getX(),(float)result.getY(),(float)result.getZ());
+	}
+	
 	public float maxX(){
 		return Math.max(points[0].x, Math.max(points[1].x, points[2].x));
 	}
@@ -43,9 +54,17 @@ public class Triangle3D {
 	}
 	
 	public float minY(){
-		return Math.max(points[0].y, Math.max(points[1].y, points[2].y));
+		return Math.min(points[0].y, Math.min(points[1].y, points[2].y));
 	}
 
+	public float maxZ(){
+		return Math.max(points[0].z, Math.max(points[1].z, points[2].z));
+	}
+	
+	public float minZ(){
+		return Math.min(points[0].z, Math.min(points[1].z, points[2].z));
+	}
+	
 	public PVector[] getPoints() {
 		return points;
 	}
