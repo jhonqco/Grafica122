@@ -5,19 +5,23 @@ import processing.core.PVector;
 
 public class Triangle3D {
 	private PVector[] points;
+	private Box caja;
 
-	public Triangle3D(PVector point1, PVector point2, PVector point3) {
+	public Triangle3D(PVector point1, PVector point2, PVector point3,Box caja) {
 		points = new PVector[3];
 		this.points[0] = point1;
 		this.points[1] = point2;
 		this.points[2] = point3;
+		this.caja=caja;
 	}
 
-	public Triangle3D(PVector point2, PVector point3) {
-		this(new PVector(0, 0, 0), point2, point3);
+	public Triangle3D(PVector point2, PVector point3, Box caja) {
+		this(new PVector(0, 0, 0), point2, point3,caja);
 	}
 
 	public void drawOn(PGraphics canvas) {
+		canvas.pushStyle();
+		canvas.fill(caja.getColor());
 		canvas.beginShape();
 		for (PVector point : points) {
 			if (canvas.is2D()) {
@@ -27,6 +31,7 @@ public class Triangle3D {
 			}
 		}
 		canvas.endShape(PGraphics.CLOSE);
+		canvas.popStyle();
 	}
 	
 	public PVector normal(){

@@ -31,65 +31,78 @@ public class Pintor {
 
 class ChairWeightComparator implements Comparator<Triangle3D> {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public int compare(Triangle3D tA, Triangle3D tB) {
-		
+
 		if (traslape(tA, tB) == false) {
 			System.out.println("1º no translape");
 			return -1;
 		}
 		// 2º Prueba:
-		else if(atrasDe(tA,tB) == true){
+		else if (atrasDe(tA, tB) == true) {
 			System.out.println("2º si esta atras");
 			return -1;
 		}
 		// 3º Prueba
-		else if(enfreteDe(tA,tB) == true){
+		else if (enfreteDe(tA, tB) == true) {
 			System.out.println("3º si esta al frente");
 			return -1;
 		}
-		
+
 		// Prueba con z promedio
 		float zAProm = Math.abs((tA.maxZ() + tA.minZ()) / 2);
 		float zBProm = Math.abs((tB.maxZ() + tA.minZ()) / 2);
-		System.out.println(zAProm+" - "+zBProm);
-		if(zAProm >= zBProm){
+		System.out.println(zAProm + " - " + zBProm);
+		if (zAProm >= zBProm) {
 			return -1;
 		}
 		return 1;
 	}
 
 	private boolean enfreteDe(Triangle3D tA, Triangle3D tB) {
-		Vector3D normal = Vector3Ds.getVector3D(tB.normal());
-		for(PVector point: tA.getPoints()){
-			double angle = Vector3D.angle(normal, Vector3Ds.getVector3D(PVector.sub(point, tB.getPoints()[0])));
-			if(angle <= (Math.PI/2)){
-				return false;
-			}
-		}
-		return true;	}
-
-	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
-		for(PVector point: tA.getPoints()){
-			System.out.println(point);
-		}
-		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
-		if(normal.getZ() < 0){
-			normal=normal.negate();
-		}
-		for(PVector point: tB.getPoints()){
-			double angle = Vector3D.angle(normal, Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0])));
-			if(angle > (Math.PI/2)){
+		for(double angle: this.anglesFromNormal(tA, tB)){
+			if (angle <= (Math.PI / 2)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	/** 1º Traslape, prueba del algoritmo del pintos 
+	private Double[] anglesFromNormal(Triangle3D tA, Triangle3D tB){
+		ArrayList<Double> anglesList=new ArrayList<Double>(tA.getPoints().length);
+		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
+		if (normal.getZ() < 0) {
+			normal = normal.negate();
+		}
+		for (PVector point : tB.getPoints()) {
+			Vector3D vector = Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0]));
+			if (vector.getNorm() != 0) {
+				double angle = Vector3D.angle(normal, vector);
+				anglesList.add(angle);
+			}
+		}
+		Double[] anglesArray = new Double[anglesList.size()];
+		anglesList.toArray(anglesArray);
+		return anglesArray;
+	}
+	
+	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
+		for(double angle: this.anglesFromNormal(tA, tB)){
+			if (angle > (Math.PI / 2)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 1º Traslape, prueba del algoritmo del pintos
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
@@ -98,13 +111,13 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		// Translape con respecto a X
 		float intersectionMax = Math.min(a.maxX(), b.maxX());
 		float intersectionMin = Math.max(a.minX(), b.minX());
-		if (intersectionMax <= intersectionMin ) {
+		if (intersectionMax <= intersectionMin) {
 			return false;
 		}
 		// Translape con respecto a Y
 		intersectionMax = Math.min(a.maxY(), b.maxY());
 		intersectionMin = Math.max(a.minY(), b.minY());
-		if (intersectionMax <= intersectionMin ) {
+		if (intersectionMax <= intersectionMin) {
 			return false;
 		}
 		return true;
