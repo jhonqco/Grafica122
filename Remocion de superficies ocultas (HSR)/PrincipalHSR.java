@@ -20,7 +20,7 @@ public class PrincipalHSR extends PApplet {
 	private Pintor pintor;
 
 	public void setup() {
-		int numberOfBoxes = 50;
+		int numberOfBoxes = 2;
 
 		size(640, 480, P3D);
 		leftCanvas = createGraphics(width / 2, height, P3D);
@@ -41,9 +41,10 @@ public class PrincipalHSR extends PApplet {
 		}
 
 		scene.setGridIsDrawn(false);
-		scene.setAxisIsDrawn(false);
+		scene.setAxisIsDrawn(true);
 		scene.setRadius(200);
 		scene.enableFrustumEquationsUpdate();
+		scene.setCameraPathsAreDrawn(true);
 		scene.showAll();
 
 		boxes = new ArrayList<Box>(numberOfBoxes);
@@ -53,24 +54,23 @@ public class PrincipalHSR extends PApplet {
 
 		}
 		pintor = new Pintor();
-		pintor.setPlanos(boxes);
 	}
 
 	public void draw() {
 		leftCanvas.beginDraw();
 		leftCanvas.hint(PGraphics.DISABLE_DEPTH_TEST);
 		// Manejar eventos mouse segun posicion
-		if (mouseX > leftCanvas.width) {
-			scene.disableMouseHandling();
-		} else {
-			scene.enableMouseHandling();
-		}
 
 		scene.beginDraw();
 		scene.renderer().background(0);
+<<<<<<< HEAD
 		for (int i = 0; i < boxes.size(); i++) {
 			boxes.get(i).draw();
 			
+=======
+		for (Box box: boxes) {
+			box.draw();
+>>>>>>> refs/remotes/origin/myHSR
 		}
 		scene.endDraw();
 		leftCanvas.endDraw();
@@ -79,8 +79,12 @@ public class PrincipalHSR extends PApplet {
 		// Dibujar canvas derecho
 		rightCanvas.beginDraw();
 		rightCanvas.background(255);
-
-		pintor.dibujarPlanos(rightCanvas);
+		
+		ArrayList<Triangle3D> planos = new ArrayList<Triangle3D>();
+		for(Box box: boxes){
+			planos.addAll(box.getPlanesCameraCoord());
+		}
+		pintor.dibujarPlanos(rightCanvas,planos);
 
 		rightCanvas.endDraw();
 		image(rightCanvas, width / 2, 0);

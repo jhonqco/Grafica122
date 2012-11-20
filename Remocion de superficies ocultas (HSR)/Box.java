@@ -8,11 +8,11 @@ import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
 
 public class Box {
-	private ArrayList<PVector> vertices = new ArrayList<PVector>(8);
+	private ArrayList<Triangle3D> vertices = new ArrayList<Triangle3D>();
 
-	InteractiveFrame iFrame;
-	float width, height, depth;
-	int color;
+	private InteractiveFrame iFrame;
+	private float width, height, depth;
+	private int color;
 	private PGraphics canvas;
 	private Scene scene;
 	ArrayList<Triangle3D> triangles= new ArrayList<Triangle3D>(12);
@@ -24,6 +24,7 @@ public class Box {
 		this.scene = scene;
 
 		// sets size randomly
+<<<<<<< HEAD
 		width = scene.parent.random(10, 40);
 		height = scene.parent.random(10, 40);
 		depth = scene.parent.random(10, 40);
@@ -36,9 +37,19 @@ public class Box {
 		//set box's triangles
 		setTriangles();
 
+=======
+		int maxSize=50;
+		int minSize=10;
+		width = scene.parent.random(minSize, maxSize);
+		height = scene.parent.random(minSize, maxSize);
+		depth = scene.parent.random(minSize, maxSize);
+		
+>>>>>>> refs/remotes/origin/myHSR
 		// sets color randomly
-		color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
-				scene.parent.random(0, 255));
+				color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
+						scene.parent.random(0, 255));
+
+		vertices.add(new Triangle3D(new PVector(width, 0),new PVector(0, height, 0), color));
 
 		setPosition();
 	}
@@ -58,6 +69,7 @@ public class Box {
 		} else
 			canvas.fill(getColor());
 		// Draw a box
+<<<<<<< HEAD
 		// canvas.box(w, h, d);
 		canvas.stroke(this.getColor());
 		
@@ -65,8 +77,16 @@ public class Box {
 		
 		for (int i=0;i<triangles.size();i++) {
 			this.triangles.get(i).drawOn(canvas);
+=======
+		for (Triangle3D vertice : vertices) {
+			vertice.drawOn(canvas);
+>>>>>>> refs/remotes/origin/myHSR
 		}
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> refs/remotes/origin/myHSR
 		canvas.popStyle();
 		canvas.popMatrix();
 	}
@@ -140,6 +160,7 @@ public class Box {
 		iFrame.setOrientation(new Quaternion(new PVector(0, 1, 0), to));
 	}
 
+<<<<<<< HEAD
 	public void draw2D(PGraphics canvas) {
 		canvas.pushMatrix();
 		canvas.pushStyle();
@@ -160,12 +181,29 @@ public class Box {
 			canvas.vertex(cameraVertice.x, cameraVertice.y);
 			cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint3());
 			canvas.vertex(cameraVertice.x, cameraVertice.y);
+=======
+	public ArrayList<Triangle3D> getPlanesCameraCoord() {
+		ArrayList<Triangle3D> planes = new ArrayList<Triangle3D>(vertices.size());
+		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
+		for (Triangle3D vertice : vertices) {
+			PVector point1 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[0]);
+			point1.add(position);
+			PVector point2 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[1]);
+			point2.add(position);
+			PVector point3 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[2]);
+			point3.add(position);
+			planes.add(new Triangle3D(point1, point2, point3,color));
+>>>>>>> refs/remotes/origin/myHSR
 		}
+<<<<<<< HEAD
 		
 		canvas.endShape(PGraphics.CLOSE);
 		
 		canvas.popStyle();
 		canvas.popMatrix();
 
+=======
+		return planes;
+>>>>>>> refs/remotes/origin/myHSR
 	}
 }
