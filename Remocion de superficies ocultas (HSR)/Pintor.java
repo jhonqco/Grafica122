@@ -75,6 +75,9 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 
 	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
 		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
+		if(normal.getZ() < 0){
+			normal=normal.negate();
+		}
 		for(PVector point: tB.getPoints()){
 			double angle = Vector3D.angle(normal, Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0])));
 			if(angle > (Math.PI/2)){
