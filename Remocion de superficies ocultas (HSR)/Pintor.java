@@ -43,7 +43,6 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		}
 		// 2º Prueba:
 		else if(atrasDe(tA,tB) == true){
-			System.out.println(tA.maxZ()+"=="+tB.maxZ());
 			System.out.println("2º si esta atras");
 			return -1;
 		}
@@ -74,6 +73,9 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		return true;	}
 
 	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
+		for(PVector point: tA.getPoints()){
+			System.out.println(point);
+		}
 		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
 		if(normal.getZ() < 0){
 			normal=normal.negate();

@@ -44,7 +44,6 @@ public class PrincipalHSR extends PApplet {
 		scene.setAxisIsDrawn(true);
 		scene.setRadius(200);
 		scene.enableFrustumEquationsUpdate();
-		scene.setCameraPathsAreDrawn(true);
 		scene.showAll();
 
 		boxes = new ArrayList<Box>(numberOfBoxes);
@@ -63,14 +62,8 @@ public class PrincipalHSR extends PApplet {
 
 		scene.beginDraw();
 		scene.renderer().background(0);
-<<<<<<< HEAD
-		for (int i = 0; i < boxes.size(); i++) {
-			boxes.get(i).draw();
-			
-=======
 		for (Box box: boxes) {
 			box.draw();
->>>>>>> refs/remotes/origin/myHSR
 		}
 		scene.endDraw();
 		leftCanvas.endDraw();

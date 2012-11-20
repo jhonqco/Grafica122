@@ -8,14 +8,13 @@ import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
 
 public class Box {
-	private ArrayList<Triangle3D> vertices = new ArrayList<Triangle3D>();
 
 	private InteractiveFrame iFrame;
 	private float width, height, depth;
 	private int color;
 	private PGraphics canvas;
 	private Scene scene;
-	ArrayList<Triangle3D> triangles= new ArrayList<Triangle3D>(12);
+	private ArrayList<Triangle3D> triangles= new ArrayList<Triangle3D>(12);
 	
 	
 	Box(Scene scene) {
@@ -24,32 +23,18 @@ public class Box {
 		this.scene = scene;
 
 		// sets size randomly
-<<<<<<< HEAD
-		width = scene.parent.random(10, 40);
-		height = scene.parent.random(10, 40);
-		depth = scene.parent.random(10, 40);
-
-		vertices.clear();
-		vertices.add(new PVector(0, 0, 0));
-		vertices.add(new PVector(0, height, 0));
-		vertices.add(new PVector(width, 0, 0));
+int maxSize=50;
+int minSize=10;
+width = scene.parent.random(minSize, maxSize);
+height = scene.parent.random(minSize, maxSize);
+depth = scene.parent.random(minSize, maxSize);
 		
 		//set box's triangles
 		setTriangles();
 
-=======
-		int maxSize=50;
-		int minSize=10;
-		width = scene.parent.random(minSize, maxSize);
-		height = scene.parent.random(minSize, maxSize);
-		depth = scene.parent.random(minSize, maxSize);
-		
->>>>>>> refs/remotes/origin/myHSR
 		// sets color randomly
 				color = scene.parent.color(scene.parent.random(0, 255), scene.parent.random(0, 255),
 						scene.parent.random(0, 255));
-
-		vertices.add(new Triangle3D(new PVector(width, 0),new PVector(0, height, 0), color));
 
 		setPosition();
 	}
@@ -69,24 +54,13 @@ public class Box {
 		} else
 			canvas.fill(getColor());
 		// Draw a box
-<<<<<<< HEAD
 		// canvas.box(w, h, d);
 		canvas.stroke(this.getColor());
 		
-		
-		
 		for (int i=0;i<triangles.size();i++) {
 			this.triangles.get(i).drawOn(canvas);
-=======
-		for (Triangle3D vertice : vertices) {
-			vertice.drawOn(canvas);
->>>>>>> refs/remotes/origin/myHSR
 		}
-<<<<<<< HEAD
-		
-=======
 
->>>>>>> refs/remotes/origin/myHSR
 		canvas.popStyle();
 		canvas.popMatrix();
 	}
@@ -100,29 +74,29 @@ public class Box {
 	public void setTriangles(){
 		Triangle3D triangle;
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,width,0),new PVector(0,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(0,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,height),new PVector(0,width,height),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,height),new PVector(depth,0,height),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(0,0,height),new PVector(depth,0,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,height),new PVector(depth,0,0));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,width,0),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(depth,0,0),new PVector(depth,0,height),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,0,0),new PVector(depth,0,0),new PVector(0,width,0));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(depth,width,0),new PVector(depth,0,0),new PVector(0,width,0));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,width,0),new PVector(depth,width,0),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 		triangle=new Triangle3D(new PVector(0,width,0),new PVector(0,width,height),new PVector(depth,width,height));
-		triangles.add(0,triangle);
+		triangles.add(triangle);
 	}
 
 
@@ -160,50 +134,18 @@ public class Box {
 		iFrame.setOrientation(new Quaternion(new PVector(0, 1, 0), to));
 	}
 
-<<<<<<< HEAD
-	public void draw2D(PGraphics canvas) {
-		canvas.pushMatrix();
-		canvas.pushStyle();
-		canvas.fill(getColor());
-		canvas.stroke(getColor());
-		
-		PVector position = scene.camera().projectedCoordinatesOf(iFrame.position());
-		System.out.println(position);
-		canvas.translate(position.x,position.y);
-		
-		canvas.stroke(this.getColor());
-		canvas.beginShape();
-	
-		for(int i=0;i<this.triangles.size();i++){
-			PVector cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint1());
-			canvas.vertex(cameraVertice.x, cameraVertice.y);
-			cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint2());
-			canvas.vertex(cameraVertice.x, cameraVertice.y);
-			cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint3());
-			canvas.vertex(cameraVertice.x, cameraVertice.y);
-=======
 	public ArrayList<Triangle3D> getPlanesCameraCoord() {
-		ArrayList<Triangle3D> planes = new ArrayList<Triangle3D>(vertices.size());
+		ArrayList<Triangle3D> planes = new ArrayList<Triangle3D>(triangles.size());
 		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
-		for (Triangle3D vertice : vertices) {
+		for (Triangle3D vertice : triangles) {
 			PVector point1 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[0]);
 			point1.add(position);
 			PVector point2 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[1]);
 			point2.add(position);
 			PVector point3 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[2]);
 			point3.add(position);
-			planes.add(new Triangle3D(point1, point2, point3,color));
->>>>>>> refs/remotes/origin/myHSR
+			planes.add(new Triangle3D(point1, point2, point3));
 		}
-<<<<<<< HEAD
-		
-		canvas.endShape(PGraphics.CLOSE);
-		
-		canvas.popStyle();
-		canvas.popMatrix();
-
-=======
 		return planes;
->>>>>>> refs/remotes/origin/myHSR
 	}
 }
