@@ -152,12 +152,18 @@ public class Box {
 		
 		canvas.stroke(this.getColor());
 		canvas.beginShape();
-		for (PVector vertice : vertices) {
-			PVector cameraVertice = scene.camera().projectedCoordinatesOf(vertice);
+	
+		for(int i=0;i<this.triangles.size();i++){
+			PVector cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint1());
+			canvas.vertex(cameraVertice.x, cameraVertice.y);
+			cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint2());
+			canvas.vertex(cameraVertice.x, cameraVertice.y);
+			cameraVertice = scene.camera().projectedCoordinatesOf(this.triangles.get(i).getPoint3());
 			canvas.vertex(cameraVertice.x, cameraVertice.y);
 		}
+		
 		canvas.endShape(PGraphics.CLOSE);
-
+		
 		canvas.popStyle();
 		canvas.popMatrix();
 

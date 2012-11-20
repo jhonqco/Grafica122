@@ -29,6 +29,16 @@ public class Triangle3D{
 		return points;
 	}
 	
+	public PVector getPoint1(){
+		return points[0];
+	}
+	
+	public PVector getPoint2(){
+		return points[1];
+	}
+	public PVector getPoint3(){
+		return points[2];
+	}
 	public String toString(){
 		String s= new String("El triangulo tiene los vertices: \nP1=("+points[0].x+","+points[0].y+","+points[0].z+")\nP2=("+points[1].x+","+points[1].y+","+points[1].z+")\nP3=("+points[2].x+","+points[2].y+","+points[2].z+")\n");
 		return s;
