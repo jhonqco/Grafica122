@@ -64,42 +64,6 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		return 1;
 	}
 
-	private boolean enfreteDe(Triangle3D tA, Triangle3D tB) {
-		for(double angle: this.anglesFromNormal(tA, tB)){
-			if (angle <= (Math.PI / 2)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private Double[] anglesFromNormal(Triangle3D tA, Triangle3D tB){
-		ArrayList<Double> anglesList=new ArrayList<Double>(tA.getPoints().length);
-		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
-		if (normal.getZ() < 0) {
-			normal = normal.negate();
-		}
-		for (PVector point : tB.getPoints()) {
-			Vector3D vector = Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0]));
-			if (vector.getNorm() != 0) {
-				double angle = Vector3D.angle(normal, vector);
-				anglesList.add(angle);
-			}
-		}
-		Double[] anglesArray = new Double[anglesList.size()];
-		anglesList.toArray(anglesArray);
-		return anglesArray;
-	}
-	
-	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
-		for(double angle: this.anglesFromNormal(tA, tB)){
-			if (angle > (Math.PI / 2)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	/**
 	 * 1º Traslape, prueba del algoritmo del pintos
 	 * 
@@ -121,5 +85,43 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 			return false;
 		}
 		return true;
+	}
+
+	private boolean atrasDe(Triangle3D tA, Triangle3D tB) {
+		System.out.println("normalA: "+tA.normal());
+		System.out.println("normalB: "+tB.normal());
+		for(double angle: this.anglesFromNormal(tA, tB)){
+			if (angle > (Math.PI / 2)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean enfreteDe(Triangle3D tA, Triangle3D tB) {
+		for(double angle: this.anglesFromNormal(tB, tA)){
+			if (angle <= (Math.PI / 2)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Double[] anglesFromNormal(Triangle3D tA, Triangle3D tB){
+		ArrayList<Double> anglesList=new ArrayList<Double>(tA.getPoints().length);
+		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
+//		if (normal.getZ() < 0) {
+//			normal = normal.negate();
+//		}
+		for (PVector point : tB.getPoints()) {
+			Vector3D vector = Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0]));
+			if (vector.getNorm() != 0) {
+				double angle = Vector3D.angle(normal, vector);
+				anglesList.add(angle);
+			}
+		}
+		Double[] anglesArray = new Double[anglesList.size()];
+		anglesList.toArray(anglesArray);
+		return anglesArray;
 	}
 }

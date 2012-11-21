@@ -5,7 +5,7 @@ import processing.core.PVector;
 
 public class Triangle3D {
 	private PVector[] points;
-	private Box caja;
+	Box caja;
 
 	public Triangle3D(PVector point1, PVector point2, PVector point3,Box caja) {
 		points = new PVector[3];
