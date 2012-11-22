@@ -7,7 +7,6 @@ import processing.core.PVector;
 public class Vector3Ds {
 
 	public static Vector3D getVector3D(PVector point) {
-		// TODO Auto-generated method stub
 		return new Vector3D(point.x, point.y, point.z);
 	}
 	

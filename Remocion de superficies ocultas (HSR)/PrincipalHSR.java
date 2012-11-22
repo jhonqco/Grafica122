@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PVector;
 import processing.opengl.PGraphicsOpenGL;
 import remixlab.proscene.CameraProfile;
+import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
 
 /**
@@ -20,7 +22,7 @@ public class PrincipalHSR extends PApplet {
 	private Pintor pintor;
 
 	public void setup() {
-		int numberOfBoxes = 3;
+		int numberOfBoxes = 1;
 
 		size(640, 480, P3D);
 		leftCanvas = createGraphics(width / 2, height, P3D);
@@ -62,7 +64,7 @@ public class PrincipalHSR extends PApplet {
 
 		scene.beginDraw();
 		scene.renderer().background(0);
-		for (Box box: boxes) {
+		for (Box box : boxes) {
 			box.draw();
 		}
 		scene.endDraw();
@@ -72,13 +74,12 @@ public class PrincipalHSR extends PApplet {
 		// Dibujar canvas derecho
 		rightCanvas.beginDraw();
 		rightCanvas.background(255);
-		
+
 		ArrayList<Triangle3D> planos = new ArrayList<Triangle3D>();
-		for(Box box: boxes){
-			planos.addAll(box.getPlanesCameraCoord());
+		for (Box box : boxes) {
+			planos.addAll(box.getProjectedCameraCoord(scene.camera()));
 		}
-		//rightCanvas.noStroke();
-		pintor.dibujarPlanos(rightCanvas,planos);
+		pintor.dibujarPlanos(rightCanvas, planos);
 
 		rightCanvas.endDraw();
 		image(rightCanvas, width / 2, 0);

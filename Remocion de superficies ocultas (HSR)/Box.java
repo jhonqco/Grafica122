@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
+import remixlab.proscene.Camera;
 import remixlab.proscene.InteractiveFrame;
 import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
@@ -14,7 +15,7 @@ public class Box {
 	private int color;
 	private PGraphics canvas;
 	private Scene scene;
-	private ArrayList<Triangle3D> triangles = new ArrayList<Triangle3D>(12);
+	ArrayList<Triangle3D> triangles = new ArrayList<Triangle3D>(12);
 
 	Box(Scene scene) {
 		iFrame = new InteractiveFrame(scene);
@@ -46,16 +47,13 @@ public class Box {
 		// scene.parent.applyMatrix(iFrame.matrix()) is handy but inefficient
 		iFrame.applyTransformation(); // optimum
 
-		canvas.noStroke();
 		if (iFrame.grabsMouse()) {
 			canvas.fill(255, 0, 0);
 			scene.drawAxis(PApplet.max(width, height, depth) * 1.3f);
 		} else
 			canvas.fill(getColor());
-		// Draw a box
-		// canvas.box(w, h, d);
-		canvas.stroke(this.getColor());
 
+		// Draw the box
 		for (int i = 0; i < triangles.size(); i++) {
 			this.triangles.get(i).drawOn(canvas);
 		}
@@ -143,17 +141,18 @@ public class Box {
 		iFrame.setOrientation(new Quaternion(new PVector(0, 1, 0), to));
 	}
 
-	public ArrayList<Triangle3D> getPlanesCameraCoord() {
+	public ArrayList<Triangle3D> getProjectedCameraCoord(Camera camera) {
 		ArrayList<Triangle3D> planes = new ArrayList<Triangle3D>(triangles.size());
-		PVector position = scene.camera().cameraCoordinatesOf(iFrame.position());
+		
 		for (Triangle3D vertice : triangles) {
-			PVector point1 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[0]);
-			point1.add(position);
-			PVector point2 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[1]);
-			point2.add(position);
-			PVector point3 = scene.camera().projectedCoordinatesOf(vertice.getPoints()[2]);
-			point3.add(position);
-			planes.add(new Triangle3D(point1, point2, point3, this));
+			ArrayList<PVector> points = new ArrayList<PVector>(vertice.getPoints().length);
+			for(PVector point: vertice.getPoints()){
+				PVector newPoint = getOrientation().rotate(point);
+				newPoint = PVector.add(newPoint, getPosition());
+				newPoint = camera.projectedCoordinatesOf(newPoint);
+				points.add(newPoint);
+			}
+			planes.add(new Triangle3D(points.get(0), points.get(1), points.get(2), this));
 		}
 		return planes;
 	}
