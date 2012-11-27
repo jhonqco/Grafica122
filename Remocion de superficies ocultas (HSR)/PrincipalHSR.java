@@ -79,6 +79,7 @@ public class PrincipalHSR extends PApplet {
 		for (Box box : boxes) {
 			planos.addAll(box.getProjectedCameraCoord(scene.camera()));
 		}
+		
 		pintor.dibujarPlanos(rightCanvas, planos);
 
 		rightCanvas.endDraw();

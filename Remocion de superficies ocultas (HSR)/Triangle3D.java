@@ -7,6 +7,9 @@ import utilidades.Vector3Ds;
 public class Triangle3D {
 	private PVector[] points;
 	Box caja;
+	private int r=-1,g=-1,b=-1;
+	String name;
+	private PVector normal;
 
 	public Triangle3D(PVector point1, PVector point2, PVector point3, Box caja) {
 		points = new PVector[3];
@@ -14,6 +17,7 @@ public class Triangle3D {
 		this.points[1] = point2;
 		this.points[2] = point3;
 		this.caja = caja;
+		this.calcNormal();
 	}
 
 	public Triangle3D(PVector point2, PVector point3, Box caja) {
@@ -22,7 +26,11 @@ public class Triangle3D {
 
 	public void drawOn(PGraphics canvas) {
 		canvas.pushStyle();
-		canvas.fill(caja.getColor());
+		if(r == -1){
+		canvas.fill(caja.getColor());}
+		else{
+			canvas.fill(r,g,b);
+		}
 		canvas.beginShape();
 		for (PVector point : points) {
 			if (canvas.is2D()) {
@@ -35,13 +43,34 @@ public class Triangle3D {
 		canvas.popStyle();
 	}
 
-	public PVector normal() {
+	public PVector getNormal() {
+		return normal;
+	}
+	
+	private void calcNormal(){
 		PVector a = PVector.sub(points[1], points[0]);
 		PVector b = PVector.sub(points[2], points[0]);
 		Vector3D a2 = Vector3Ds.getVector3D(a);
 		Vector3D b2 = Vector3Ds.getVector3D(b);
 		Vector3D result = Vector3D.crossProduct(a2, b2);
-		return new PVector((float) result.getX(), (float) result.getY(), (float) result.getZ());
+		normal = new PVector((float) result.getX(), (float) result.getY(), (float) result.getZ());
+	}
+
+	public PVector[] getPoints() {
+		return points;
+	}
+	
+	public Triangle3D getCopy(PVector a, PVector b, PVector c){
+		Triangle3D copy=new Triangle3D(a, b, c, this.caja);
+		copy.name=this.name;
+		copy.setColor(r, g, this.b);
+		return copy;
+	}
+	
+	public void setColor(int r, int g, int b){
+		this.r=r;
+		this.g=g;
+		this.b=b;
 	}
 
 	public float maxX() {
@@ -66,10 +95,6 @@ public class Triangle3D {
 
 	public float minZ() {
 		return Math.min(points[0].z, Math.min(points[1].z, points[2].z));
-	}
-
-	public PVector[] getPoints() {
-		return points;
 	}
 
 }

@@ -23,6 +23,7 @@ public class Pintor {
 			// }
 			System.out.println(e.getMessage());
 		}
+		System.out.println("FIN ORDENAR");
 		for (Triangle3D caja : planos) {
 			caja.drawOn(canvas);
 		}
@@ -34,8 +35,12 @@ class zComparator implements Comparator<Triangle3D> {
 
 	@Override
 	public int compare(Triangle3D trasero, Triangle3D delantero) {
-		// Prueba con z minimo
-		return (int) (trasero.minZ()-delantero.minZ());
+		// Ordenar del mayor al menor valor de z
+		// System.out.println(trasero.name+" z max "+trasero.maxZ());
+		// System.out.println(delantero.name+" z max "+delantero.maxZ());
+		int result = (int) Math.signum(delantero.maxZ() - trasero.maxZ());
+		// System.out.println("result = "+result);
+		return result;
 	}
 
 }
@@ -52,20 +57,20 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		// Uso de las pruebas del algoritmo del pintor
 		// 1º Prueba
 		if (traslape(trasero, delantero) == false) {
-			System.out.println("1º no translape");
+			System.out.println(trasero.name + " 1º NO TRASLAPE " + delantero.name);
 			return 0;
 		}
 		// 2º Prueba:
 		else if (detrasDe(trasero, delantero) == trasero.getPoints().length) {
-			System.out.println("2º A esta atras de B");
+			System.out.println("2° " + trasero.name + " esta ATRAS de " + delantero.name);
 			return -1;
 		}
 		// 3º Prueba
 		else if (enfreteDe(trasero, delantero) == true) {
-			System.out.println("3º si esta al frente");
+			System.out.println(trasero.name + " 3º esta al FRENTE de " + delantero.name);
 			return -1;
 		}
-
+		System.out.println("Fallan pruebas => " + delantero.name + " esta atras de " + trasero.name);
 		return 1;
 	}
 
@@ -80,16 +85,16 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		// Translape con respecto a X
 		float intersectionMax = Math.min(a.maxX(), b.maxX());
 		float intersectionMin = Math.max(a.minX(), b.minX());
-		if (intersectionMax <= intersectionMin) {
-			return false;
+		if (intersectionMin < intersectionMax) {
+			return true;
 		}
 		// Translape con respecto a Y
 		intersectionMax = Math.min(a.maxY(), b.maxY());
 		intersectionMin = Math.max(a.minY(), b.minY());
-		if (intersectionMax <= intersectionMin) {
-			return false;
+		if (intersectionMin < intersectionMax) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -101,27 +106,36 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 	 */
 	private int detrasDe(Triangle3D tA, Triangle3D tB) {
 		boolean negarNormal = false;
-		if (tB.normal().z > 0) {
+		System.out.println(tB.name + " normal " + tB.getNormal());
+		if (tB.getNormal().z < 0) {
+			System.out.println("normal negada " + Vector3Ds.getVector3D(tB.getNormal()).negate());
 			negarNormal = true;
 		}
 		int n = 0;
-		for (double angle : this.anglesFromNormal(tB, tA, negarNormal)) {
-			if (angle < (Math.PI / 2)) {
+		Float[] angles = this.anglesFromNormal(tB, tA, negarNormal);
+		for (double angle : angles) {
+			System.out.print("angulo: " + (float) Math.toDegrees(angle) + " - ");
+			if ((float) Math.toDegrees(angle) <= 90) {
 				n++;
 			}
+		}
+		if (n == angles.length) {
+			n = tB.getPoints().length;
 		}
 		return n;
 	}
 
 	private boolean enfreteDe(Triangle3D tA, Triangle3D tB) {
+		System.out.println(tA.name + " " + detrasDe(tA, tB) + " puntos atras de " + tB.name);
 		if (this.detrasDe(tA, tB) == 0) {
 			return false;
 		}
 		boolean negarNormal = false;
-		if (tA.normal().z < 0) {
+		if (tB.getNormal().z < 0) {
 			negarNormal = true;
 		}
-		for (double angle : this.anglesFromNormal(tA, tB, negarNormal)) {
+		for (double angle : this.anglesFromNormal(tB, tA, negarNormal)) {
+			System.out.print("angulo: " + Math.toDegrees(angle) + " - ");
 			if (angle > (Math.PI / 2)) {
 				return false;
 			}
@@ -137,21 +151,25 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 	 * @param negarNormal
 	 * @return
 	 */
-	private Double[] anglesFromNormal(Triangle3D tA, Triangle3D tB, boolean negarNormal) {
-		ArrayList<Double> anglesList = new ArrayList<Double>(tA.getPoints().length);
-		Vector3D normal = Vector3Ds.getVector3D(tA.normal());
+	private Float[] anglesFromNormal(Triangle3D tA, Triangle3D tB, boolean negarNormal) {
+		Float[] anglesArray = new Float[tB.getPoints().length];
+		Vector3D normal = Vector3Ds.getVector3D(tA.getNormal());
 		if (negarNormal) {
 			normal = normal.negate();
 		}
-		for (PVector point : tB.getPoints()) {
+		for (int i = 0; i < anglesArray.length; i++) {
+			PVector point = tB.getPoints()[i];
 			Vector3D vector = Vector3Ds.getVector3D(PVector.sub(point, tA.getPoints()[0]));
-			if (vector.getNorm() != 0) {
-				double angle = Vector3D.angle(normal, vector);
-				anglesList.add(angle);
+			float angle;
+			if (vector.getNorm() == 0) {
+				// 90° por que esta en el plano
+				angle = (float) Math.toRadians(90);
+			} else {
+				angle = (float) Vector3D.angle(normal, vector);
+
 			}
+			anglesArray[i] = angle;
 		}
-		Double[] anglesArray = new Double[anglesList.size()];
-		anglesList.toArray(anglesArray);
 		return anglesArray;
 	}
 }
