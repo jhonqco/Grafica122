@@ -22,22 +22,19 @@ public class Pintor {
 	};
 
 	public static void dibujarPlanos(PGraphics canvas, ArrayList<Triangle3D> planos, int pruebas) {
+		System.out.println("INICIAR ORDEN");
 		try {
-			if (pruebas == Z_COMPARATOR || pruebas == TODAS_PRUEBAS) {
+			if (pruebas == Z_COMPARATOR) {
 				Collections.sort(planos, new zComparator());
-			} else if (pruebas == ESPACIOS_PRUEBAS  || pruebas == TODAS_PRUEBAS) {
+			} else if (pruebas == ESPACIOS_PRUEBAS) {
+				Collections.sort(planos, new ChairWeightComparator());
+			} else if (pruebas == TODAS_PRUEBAS) {
+				Collections.sort(planos, new zComparator());
 				Collections.sort(planos, new ChairWeightComparator());
 			}
 		} catch (IllegalArgumentException e) {
-			// for(Triangle3D t:planos){
-			// for(PVector point: t.getPoints()){
-			// System.out.print(point+" ");
-			// }
-			// System.out.println();
-			// }
 			System.out.println(e.getMessage());
 		}
-		System.out.println("FIN ORDENAR");
 		for (Triangle3D caja : planos) {
 			caja.drawOn(canvas);
 		}
@@ -50,13 +47,10 @@ class zComparator implements Comparator<Triangle3D> {
 	@Override
 	public int compare(Triangle3D trasero, Triangle3D delantero) {
 		// Ordenar del mayor al menor valor de z
-		 System.out.println(trasero.name+" z max "+trasero.maxZ());
-		 System.out.println(delantero.name+" z max "+delantero.maxZ());
 		int result = (int) Math.signum(delantero.maxZ() - trasero.maxZ());
-		if(result == 0){
+		if (result == 0) {
 			result = -1;
 		}
-		 System.out.println("result = "+result);
 		return result;
 	}
 
@@ -130,20 +124,14 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 		int n = 0;
 		Float[] angles = this.anglesFromNormal(tB, tA, negarNormal);
 		for (float angle : angles) {
-			System.out.print("angulo: " + (float) Math.toDegrees(angle) + " - ");
 			if ((float) Math.toDegrees(angle) <= 90) {
 				n++;
 			}
-		}
-		System.out.println();
-		if (n == angles.length) {
-			n = tB.getPoints().length;
 		}
 		return n;
 	}
 
 	private boolean enfreteDe(Triangle3D tA, Triangle3D tB) {
-		System.out.println(tA.name + " " + detrasDe(tA, tB) + " puntos atras de " + tB.name);
 		if (this.detrasDe(tA, tB) == 0) {
 			return false;
 		}
@@ -152,8 +140,7 @@ class ChairWeightComparator implements Comparator<Triangle3D> {
 			negarNormal = true;
 		}
 		for (float angle : this.anglesFromNormal(tB, tA, negarNormal)) {
-			System.out.print("angulo: " + (float) Math.toDegrees(angle) + " - ");
-			if ((float)Math.toDegrees(angle) > 90) {
+			if ((float) Math.toDegrees(angle) > 90) {
 				return false;
 			}
 		}

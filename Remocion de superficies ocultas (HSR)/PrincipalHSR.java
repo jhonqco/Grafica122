@@ -24,11 +24,11 @@ public class PrincipalHSR extends PApplet {
 		int numberOfBoxes = 1;
 
 		size(640, 480, P3D);
-		upLeftCanvas = createGraphics(width / 2, height/2, P3D);
-		upRightCanvas = createGraphics(width / 2, height/2);
-		bottomRightCanvas = createGraphics(width / 2, height/2);
-		bottomLeftCanvas = createGraphics(width / 2, height/2);
-		
+		upLeftCanvas = createGraphics(width / 2, height / 2, P3D);
+		upRightCanvas = createGraphics(width / 2, height / 2);
+		bottomRightCanvas = createGraphics(width / 2, height / 2);
+		bottomLeftCanvas = createGraphics(width / 2, height / 2);
+
 		scene = new Scene(this, (PGraphicsOpenGL) upLeftCanvas);
 
 		// add the click actions to all camera profiles
@@ -77,7 +77,7 @@ public class PrincipalHSR extends PApplet {
 		for (Box box : boxes) {
 			planos.addAll(box.getProjectedCameraCoord(scene.camera()));
 		}
-		
+
 		// Dibujar canvas derecho
 		upRightCanvas.beginDraw();
 		upRightCanvas.background(255);
@@ -88,28 +88,28 @@ public class PrincipalHSR extends PApplet {
 
 		upRightCanvas.endDraw();
 		image(upRightCanvas, width / 2, 0);
-		
-		//Dibujar canvas inferior izquierdo
+
+		// Dibujar canvas inferior izquierdo
 		bottomLeftCanvas.beginDraw();
 		bottomLeftCanvas.background(200);
 		bottomLeftCanvas.fill(0);
 		bottomLeftCanvas.text("Solo ordenar por Z", 0, 10);
-		
+
 		ArrayList<Triangle3D> planosBLC = new ArrayList<Triangle3D>(planos);
-		Pintor.dibujarPlanos(bottomLeftCanvas, planosBLC,Pintor.Z_COMPARATOR);
+		Pintor.dibujarPlanos(bottomLeftCanvas, planosBLC, Pintor.Z_COMPARATOR);
 		bottomLeftCanvas.endDraw();
-		image(bottomLeftCanvas,0,height/2);
-		
-		//Dibujar canvas inferior derecho
+		image(bottomLeftCanvas, 0, height / 2);
+
+		// Dibujar canvas inferior derecho
 		bottomRightCanvas.beginDraw();
 		bottomRightCanvas.background(55);
 		bottomRightCanvas.fill(255);
 		bottomRightCanvas.text("Solo pruebas de espacios", 0, 10);
-		
+
 		ArrayList<Triangle3D> planosBRC = new ArrayList<Triangle3D>(planos);
-		Pintor.dibujarPlanos(bottomRightCanvas, planosBRC,Pintor.ESPACIOS_PRUEBAS);
+		Pintor.dibujarPlanos(bottomRightCanvas, planosBRC, Pintor.ESPACIOS_PRUEBAS);
 		bottomRightCanvas.endDraw();
-		
-		image(bottomRightCanvas,width/2,height/2);
+
+		image(bottomRightCanvas, width / 2, height / 2);
 	}
 }

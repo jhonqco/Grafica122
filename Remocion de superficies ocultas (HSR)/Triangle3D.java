@@ -7,7 +7,7 @@ import utilidades.Vector3Ds;
 public class Triangle3D {
 	private PVector[] points;
 	Box caja;
-	private int r=-1,g=-1,b=-1;
+	private int red = -1, green = -1, blue = -1;
 	String name;
 	private PVector normal;
 
@@ -26,10 +26,10 @@ public class Triangle3D {
 
 	public void drawOn(PGraphics canvas) {
 		canvas.pushStyle();
-		if(r == -1){
-		canvas.fill(caja.getColor());}
-		else{
-			canvas.fill(r,g,b);
+		if (red == -1) {
+			canvas.fill(caja.getColor());
+		} else {
+			canvas.fill(red, green, blue);
 		}
 		canvas.beginShape();
 		for (PVector point : points) {
@@ -46,8 +46,8 @@ public class Triangle3D {
 	public PVector getNormal() {
 		return normal;
 	}
-	
-	private void calcNormal(){
+
+	private void calcNormal() {
 		PVector a = PVector.sub(points[1], points[0]);
 		PVector b = PVector.sub(points[2], points[0]);
 		Vector3D a2 = Vector3Ds.getVector3D(a);
@@ -59,18 +59,18 @@ public class Triangle3D {
 	public PVector[] getPoints() {
 		return points;
 	}
-	
-	public Triangle3D getCopy(PVector a, PVector b, PVector c){
-		Triangle3D copy=new Triangle3D(a, b, c, this.caja);
-		copy.name=this.name;
-		copy.setColor(r, g, this.b);
+
+	public Triangle3D getCopy(PVector a, PVector b, PVector c) {
+		Triangle3D copy = new Triangle3D(a, b, c, this.caja);
+		copy.name = this.name;
+		copy.setColor(red, green, this.blue);
 		return copy;
 	}
-	
-	public void setColor(int r, int g, int b){
-		this.r=r;
-		this.g=g;
-		this.b=b;
+
+	public void setColor(int r, int g, int b) {
+		this.red = r;
+		this.green = g;
+		this.blue = b;
 	}
 
 	public float maxX() {
